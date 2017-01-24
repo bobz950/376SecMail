@@ -1,0 +1,46 @@
+STUFF THAT WE GOTTA DO FROM PSEUDOCODE - 
+
+For log in, user needs to be prompted BY THE CLIENT to log in before they have access to ask for notifications/emails or write emails
+Then they would have access to GUI interface, but not before verifying log in.
+
+	To pull notification, maybe something like this?  
+	if (buttonForYesNotificationsIsPressedInGUI) 
+	{
+	//send command to server for notification to be sent to client from server
+	//prompt if user wants to pull emails notified by the notifications sent as well
+	//if (userSaysYesToPullingEmails) {//pull some goddamn emails son}
+	}	
+
+	Begin by telling server we want notication = 
+	client then sends request - it sends a packet header that has the command for enum (GET_NOTIFICATION)
+	it's just the command - packetheader object in packetheader.java
+		
+	server then recieves message that client wants email messages
+	server sends back commmand to send notification which is a packet header (SEND_NOTIFICATION)
+	multiple packets sent with notification?
+	send notification object, but we gotta come up with what a notification object is
+	then it sends another command for get notification until it runs out of emails in the list and therefore notifications
+
+	now server is sending the packets and client is waiting and receiving them
+	we run out of notifications and we gota tell client that via command (END_NOTIFICATION)
+	while loop and send notifications until its' done and client will receive notifications
+-----------------------------------------------------------------------------------------------------	
+	pull mail - similar structure to notifications - will figure out more concrete later
+
+	Do we store emails? yes, on your own server
+	
+	email needs to be complete and closed as a packet
+	server needs to know i will accept email, server is listening specifically for email and not packet
+	give it packet header for that - SEND_EMAIL command
+	send EMAIL OBJECT
+	after email is received communiction from server to client that says email received
+--------------------------------------------------------------------------------------------------------
+Can David OR Josh work on log in prompting from client before user can have access to GUI interface for pulling notifications
+and create the necessary objects (notification object so it can be passed) and atempt to 
+use the commands to pass it?
+
+I'll (Geri) work on the remaining things for the two top methods for pulling notifications with Yovana. 
+I'll work on notification pulling, Yovana will do email pulling.
+
+If any group gets finished with their task before Tuesday, they should try and help the other group if they can
+

@@ -1,0 +1,32 @@
+client capabilities:
+	write mail
+	designate server (url and port number?)
+		in Config object
+	push mail to server
+	receive notifications from server on login (and while running)
+	do key exchange with specified secmail address?
+		get keys from file?
+	store "address book"?
+
+server capabilities:
+	listen for the single main client
+	accept and store secmails
+	send notifications to specific other secmail servers
+	listen for notifications
+	store notifications to push to client
+	listen for authenticated pull requests
+
+
+encryption:
+	email/file encryption: block encryption with aes
+	non repudiation question
+	public key encryption?
+		auto-DHKE between client 2 and server 1
+authentication
+	
+protocols
+	
+streams
+
+synchronization
+
