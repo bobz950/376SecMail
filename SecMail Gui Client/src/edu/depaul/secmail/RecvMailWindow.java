@@ -219,12 +219,36 @@ public class RecvMailWindow extends Shell {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
-	
-	//Connect to the server and get the new notifications
-	//Jacob Burkamper and Geri Toncheva
+
+	//Evan Schirle
 	private void getNewNotifications()
-	{
-	// KH: CONTENT EXCISED PER LICENSING RESTRICTION
+	{		
+		PacketHeader getNotificationsHeader = new PacketHeader(Command.GET_NOTIFICATION);
+		try {
+			io.writeObject(getNotificationsHeader);
+		} catch (IOException e1) {
+			System.out.println("failed to send request");
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try{
+			PacketHeader notifPacket = (PacketHeader) io.readObject();
+			System.out.println(notifPacket.getCommand());		//NO_NOTIFICATION
+			//not sure what to do with the packet header... 
+			
+			LinkedList notifications = (LinkedList) io.readObject();
+			while(!notifications.isEmpty()){
+				Notification n = (Notification) notifications.pop();
+				System.out.println(n.getType());	//NEW_EMAIL or EMAIL_RECEIVED
+				//if type is EMAIL_RECEIVED the email is "no longer on the server"
+				this.addNewTableItem(tblNewMail, n, false);
+				//TODO distinguish between newMail and sentMail, put in corresponding table.
+			}
+		}catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	//Jacob Burkamper
