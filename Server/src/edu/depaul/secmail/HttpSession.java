@@ -22,7 +22,7 @@ public class HttpSession {
 					Thread.sleep(60000);
 					this.sessionClean();
 				} 
-				catch (InterruptedException e) {}
+				catch (InterruptedException e) {} //TO DO -- figure out what to do here
 			}
 		}
 		//Robert Alianello
