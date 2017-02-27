@@ -19,10 +19,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class SecMailServer {
-	
+	//Robert Alianello
 	public static class HttpServer implements Runnable {
 		private ServerSocket sSocket;
-		
+		//Robert Alianello
 		public HttpServer() {
 			try {
 				this.sSocket = new ServerSocket(82);
@@ -31,7 +31,7 @@ public class SecMailServer {
 				System.out.println("IOException");
 			}
 		}
-		
+		//Robert Alianello
 		public void run() {
 			while (true) {
 				try {
@@ -53,7 +53,7 @@ public class SecMailServer {
 	
 	//Jacob Burkamper
 	public static void main(String[] args) {
-		
+		//**Robert Alianello
 		//Start thread listening for http connections
 		System.out.println("SecMailHttpd Starting...");
 		Runnable httpServ = new Thread(new HttpServer());
@@ -62,7 +62,7 @@ public class SecMailServer {
 		//start session management thread
 		Runnable sessionMan = new Thread(new HttpSession.sessionCleaner());
 		((Thread)sessionMan).start();
-		
+		//**/Robert Alianello
 		// read the command line arguments and set up the configuration
 		System.out.println("SecMaild Starting..."); // just output a message so something is on the console.
 		serverConfig = new Config(args);

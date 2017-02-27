@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import java.util.Map;
 
+//Robert Alianello
 public class HttpHandler implements Runnable {
 	public String response = "HTTP/1.1 200 OK\r\n"
 			+ "Server: BobServer 1.0\r\n"
@@ -29,6 +30,7 @@ public class HttpHandler implements Runnable {
 		this.clientSock = s;
 	}
 	
+	//Robert Alianello
 	public void setResponse(String length) {
 		//add to response headers when request is for text
 		SimpleDateFormat d = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss zzz");
@@ -37,7 +39,7 @@ public class HttpHandler implements Runnable {
 		addToResponse("Last-Modified: " + date);
 		addToResponse("Content-Length: " + length);
 	}
-	
+	//Robert Alianello
 	public void setResponse() {
 		//add to response headers when request is not for text
 		SimpleDateFormat d = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss zzz");
@@ -45,7 +47,7 @@ public class HttpHandler implements Runnable {
 		addToResponse("Date: " + date);
 		addToResponse("Last-Modified: " + date);
 	}
-	
+	//Robert Alianello
 	public void run() {
 		try {
 			in = clientSock.getInputStream();
@@ -106,7 +108,7 @@ public class HttpHandler implements Runnable {
 
 		
 	}
-	
+	//Robert Alianello
 	public HashMap<String, String> parseHeaders(BufferedReader b) {
 		String s;
 		HashMap<String, String> parsed = new HashMap<String, String>();
@@ -137,7 +139,7 @@ public class HttpHandler implements Runnable {
 		catch (IOException e) { }
 		return parsed;
 	}
-	
+	//Robert Alianello
 	private String checkSession(HashMap<String, String> requestHeaders) {
 		//check if session is active
 		String cookie;
@@ -148,18 +150,18 @@ public class HttpHandler implements Runnable {
 		}
 		return null;
 	}
-	
+	//Robert Alianello
 	public void startSession(String username) {
 		String sessionID = HttpSession.start(username);
 		addToResponse("Set-Cookie: SECMAILSESSIONID=" + sessionID);
 		
 	}
-	
+	//Robert Alianello
 	public void addToResponse(String s) {
 		//add field to response header
 		this.response = this.response + s + "\r\n";
 	}
-	
+	//Robert Alianello
 	private String handleGetRequest(String path) {
 		String body = "<html><body><h1>Hello, World!</h1></body></html>";
 		String msg;
@@ -172,7 +174,7 @@ public class HttpHandler implements Runnable {
 		else msg = body;
 		return msg;
 	}
-	
+	//Robert Alianello
 	private String handlePostRequest(String path) {
 		String msg = "";
 		if (path.equals("/signin")) {
@@ -184,7 +186,7 @@ public class HttpHandler implements Runnable {
 		}
 		return msg;
 	}
-	
+	//Robert Alianello
 	private boolean handleLogin(String username, String password) {
 		Auth auth = new Auth();
 		
