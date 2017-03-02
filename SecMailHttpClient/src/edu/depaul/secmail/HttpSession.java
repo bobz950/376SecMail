@@ -2,7 +2,6 @@ package edu.depaul.secmail;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,7 +10,7 @@ import java.util.Map.Entry;
 
 public class HttpSession {
 	//Robert Alianello
-	private static Map<String, HashMap<String, String>> sessions = new HashMap<String, HashMap<String, String>>(); //collection of all active sessions
+	protected static Map<String, Runnable> sessions = new HashMap<String, Runnable>(); //collection of all active sessions
 	private static Map<String, Long> sessionLog = new HashMap<String, Long>();
 	//Robert Alianello
 	public static class sessionCleaner implements Runnable {
@@ -42,9 +41,9 @@ public class HttpSession {
 	}
 	
 	//Robert Alianello
-	public static HashMap<String, String> get(String id) {
+	public static MailServerConnection get(String id) {
 		//get session variables for specified session id
-		return sessions.get(id);
+		return (MailServerConnection)sessions.get(id);
 	}
 	//Robert Alianello
 	public static String generateSessionID() {
@@ -56,10 +55,13 @@ public class HttpSession {
 	public static String start(String username) {
 		//generates new session id, adds to sessions collection, returns session id to client
 		String id = generateSessionID();
-		Map<String, String> newUserSession = new HashMap<String, String>();
-		newUserSession.put("user", username);
-		sessions.put(id, ((HashMap<String, String>)newUserSession));
-		sessionLog.put(id, new Date().getTime());
+		try {
+			Thread newUserSession = new MailServerConnection(id, username);
+			newUserSession.start();
+			sessions.put(id, newUserSession);
+			sessionLog.put(id, new Date().getTime());
+		}
+		catch (Exception e) { return null; }
 		return id;
 	}
 	//Robert Alianello
@@ -69,11 +71,15 @@ public class HttpSession {
 	//Robert Alianello
 	public static boolean isSet(String id) {
 		//checks if a session is active for userid
+		if (id == null) return false;
 		if (sessions.containsKey(id)) return true;
 		return false;
 	}
 	//Robert Alianello
 	public static synchronized void remove(String id) {
+		//make sure connections get closed
+		((MailServerConnection)sessions.get(id)).close();
+		//remove from session and session log
 		sessions.remove(id);
 		sessionLog.remove(id);
 	}

@@ -1,32 +1,33 @@
 package edu.depaul.secmail;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import java.util.Map;
+import edu.depaul.secmail.content.*;
 
 //Robert Alianello
 public class HttpHandler implements Runnable {
-	private String response = "HTTP/1.1 200 OK\r\n"
+	private String responseHeaders = "HTTP/1.1 200 OK\r\n"
 			+ "Server: SecMail HTTP Server 1.0\r\n"
 			+ "Content-Type: text/html\r\n"
 			+ "Connection: Close\r\n";
 	private Socket clientSock;
 	private InputStream in;
 	private OutputStream out;
-	private HashMap<String, String> requestHeaders;
-	private UserStruct user = null;
+	private MailServerConnection mainConnection = null;
+	private boolean validSession = false;
+	private HashMap<String, String> requestHeaders; //stores request headers and request parameters
+	private String user = null;
 	private RequestType method;
 	private boolean isText = true;
 	
@@ -47,7 +48,7 @@ public class HttpHandler implements Runnable {
 	}
 	
 	//Robert Alianello
-	public void setResponse(String length) {
+	public void setResponseHeaders(String length) {
 		//add to response headers when request is for text
 		SimpleDateFormat d = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss zzz");
 		String date = d.format(new Date());
@@ -56,7 +57,7 @@ public class HttpHandler implements Runnable {
 		addToResponse("Content-Length: " + length);
 	}
 	//Robert Alianello
-	public void setResponse() {
+	public void setResponseHeaders() {
 		//add to response headers when request is not for text
 		SimpleDateFormat d = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss zzz");
 		String date = d.format(new Date());
@@ -90,25 +91,34 @@ public class HttpHandler implements Runnable {
 			if (reqLocation.length > 1) addGetParams(requestHeaders, reqLocation); 
 			
 			//if session is set, create new UserStruct and set to user
-			String sessionID;
-			if ((sessionID = checkSession(requestHeaders)) != null) {
+			String sessionID = checkSession(requestHeaders);
+			if (HttpSession.isSet(sessionID)) {
 				// check if sessionID is in sessions collection. Login user if true
-				if (HttpSession.isSet(sessionID)) {
-					this.user = new UserStruct(HttpSession.get(sessionID).get("user"), SecMailServer.getGlobalConfig().getDomain(), SecMailServer.getGlobalConfig().getPort());
-					//update the time logged for this session ID so it stays active
-					HttpSession.updateTime(sessionID);
-				}
+				// -- grab MailServerConnection thread from sessions collection and assign to this thread
+				this.mainConnection = (MailServerConnection)HttpSession.get(sessionID);
+				this.user = mainConnection.getUser();
+				//update the time logged for this session ID so it stays active
+				HttpSession.updateTime(sessionID);
+				this.validSession = true;
+			}
+			//disallow all requests with no valid session, except those attempting to authenticate
+			else if (!(path.equals("/signin") && this.method == RequestType.POST)) {
+				//If no valid session, show HTTP 403 (access denied)and return
+				out.write(Main.serveLogin().getBytes());
+				this.closeAll();
+				return;
 			}
 			
-			String outputBody = ""; //body that will be sent to client
+			
+			String responseBody = ""; //body that will be sent to client
 			
 			String acceptField = requestHeaders.get("Accept");
 			//handle different request methods
 			if (method == RequestType.GET) {
 				//handle GET requests for text
 				if (acceptField.indexOf("text") >= 0) {
-					outputBody = handleGetRequest(path);
-					setResponse(new Integer(outputBody.length()).toString());
+					responseBody = handleGetRequest(path);
+					setResponseHeaders(new Integer(responseBody.length()).toString());
 				}
 				//handle GET requests for images
 				else if (acceptField.indexOf("image") >= 0 ) {
@@ -130,13 +140,13 @@ public class HttpHandler implements Runnable {
 			}
 			else if (method == RequestType.POST) {
 
-				outputBody = handlePostRequest(path);
-				setResponse(new Integer(outputBody.length()).toString());
+				responseBody = handlePostRequest(path);
+				setResponseHeaders(new Integer(responseBody.length()).toString());
 			}
-			else setResponse();
+			else setResponseHeaders();
 			
-			//output response if the request was for text
-			if (this.isText) out.write((response + "\r\n" + outputBody).getBytes());
+			//output response if the request was for text. Combine response headers with response content and send the bytes to the browser
+			if (this.isText) out.write((responseHeaders + "\r\n" + responseBody).getBytes());
 
 		} 
 		catch (IOException e) {
@@ -202,33 +212,19 @@ public class HttpHandler implements Runnable {
 	//Robert Alianello
 	public void addToResponse(String s) {
 		//add field to response header
-		this.response = this.response + s + "\r\n";
+		this.responseHeaders = this.responseHeaders + s + "\r\n";
 	}
 	//Robert Alianello
 	private String handleGetRequest(String path) {
-		String body = "<html><body><h1>Hello, World!</h1></body></html>";
-		String msg = "";
-		if (path.equals("/test")) msg = body.replaceAll("Hello", "Apple");
-		else if (path.equals("/test2")) {
-			if (this.user != null) msg = "Logged in as: " + user.getUser();
-			else msg = "Not logged in";
-		}
-		else if (path.equals("/imgtest")) msg = "<b>Image: </b><br><img src='/pizza.png'>";
-		else if (path.equals("/login")) msg = "<form method='post' action='/signin'><input id='name' name='name' type='text'><input id='pass' name='pass' type='text'>><button>Login</button</form>";
-		else msg = body;
-		return msg;
+		if (path.equals("/")) return setResponseBody(new Home(this.mainConnection));
+		else if (path.equals("/whoami")) return setResponseBody(new LoggedInAs(this.mainConnection));
+		else if (path.equals("/signout")) return setResponseBody(new SignOut(this.mainConnection));
+		else return Main.serveBadRequest();
 	}
 	//Robert Alianello
 	private String handlePostRequest(String path) {
-		String msg = "";
-		if (path.equals("/signin")) {
-			String name = this.requestHeaders.get("name");
-			String pass = this.requestHeaders.get("pass");
-			//msg = "Name: " + name + " Password: " + pass;
-			if (handleLogin(name, pass)) msg = "Login Success!";
-			else msg = "Invalid Username / Password";
-		}
-		return msg;
+		if (path.equals("/signin")) return setResponseBody(new SignIn(this.mainConnection, this));
+		else return Main.serveBadRequest();
 	}
 	//Robert Alianello
 	private byte[] handleFileRequest(String path) {
@@ -245,15 +241,14 @@ public class HttpHandler implements Runnable {
 		
 	}
 	//Robert Alianello
-	private boolean handleLogin(String username, String password) {
-		Auth auth = new Auth();
-		
-		if (auth.login(username, password)) {
+	public boolean handleLogin(String username, String password) {
+		if (Main.handleLogin(username, password)) {
 			//generate sessionID and store session. Add cookie to response
 			startSession(username);
 			return true;
 		}
-		else return false;
+		return false;
+
 	}
 	//Robert Alianello
 	private void addGetParams(HashMap<String, String> rHeaders, String[] loc) {
@@ -262,6 +257,28 @@ public class HttpHandler implements Runnable {
 			String[] p = params[i].split("=");
 			if (p.length == 2) rHeaders.put(p[0], p[1]);
 		}
+	}
+	//Robert Alianello
+	private String setResponseBody(Content c) {
+		//returns a string representing the Content object c
+		ArrayList<String> headers;
+		if ((headers = c.getAddedReponseHeaders()) != null) {
+			for (String s : headers) addToResponse(s);
+		}
+		return c.display();
+	}
+	
+	public HashMap<String, String> getRequestHeaders() {
+		return this.requestHeaders;
+	}
+	//Robert Alianello
+	private void closeAll() {
+		try {
+			this.clientSock.close();
+			this.in.close();
+			this.out.close();
+			this.mainConnection = null;
+		} catch (IOException e) { System.out.println("error while closing connection"); }
 	}
 	
 
