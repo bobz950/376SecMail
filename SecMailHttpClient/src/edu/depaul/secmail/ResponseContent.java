@@ -17,6 +17,7 @@ public abstract class ResponseContent implements Content {
 	private ArrayList<String> addedResponseHeaders;//any added response headers
 	
 	public ResponseContent(boolean useWrapper, MailServerConnection c) {
+		
 		this.useHtmlWrapper = useWrapper;
 		this.mainConnection = c;
 	}

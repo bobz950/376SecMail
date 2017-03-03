@@ -301,9 +301,12 @@ public class EmailStruct implements Serializable{
 			if (encrypted)
 			{
 				body = SecMailStaticEncryption.SecMailDecryptAES(encryptedBytes, key);
-				encryptedBytes = null; // delete the encrypted portion
-				encrypted = false; // set that we're no longer encrypted.
-				return true; //TODO: make this actually check to see if decryption was successful.
+				if (body != null) {
+					encryptedBytes = null; // delete the encrypted portion
+					encrypted = false; // set that we're no longer encrypted.
+					return true; //TODO: make this actually check to see if decryption was successful.
+				}
+				else return false;
 			}
 		}
 		catch (UnsupportedEncodingException e)

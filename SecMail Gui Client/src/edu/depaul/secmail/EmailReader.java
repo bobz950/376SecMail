@@ -300,18 +300,22 @@ public class EmailReader extends Shell {
 	@Override
 	public void open() 
 	{
-		if (email.isEncrypted())
-		{
-			PasswordDialog pd = new PasswordDialog(this, SWT.PRIMARY_MODAL);
-			pd.setMessage("The email you are trying to read is encrypted. Please enter the password.");
-			if (pd.open())
+			if (email.isEncrypted())
 			{
-				email.decrypt(pd.getText());
-				stxtBody.setText(email.getBody());
+				for (int i = 0; i < 4; i++) {
+					PasswordDialog pd = new PasswordDialog(this, SWT.PRIMARY_MODAL);
+					pd.setMessage("The email you are trying to read is encrypted. Please enter the password.");
+					if (pd.open())
+					{
+						if (email.decrypt(pd.getText())) {
+							stxtBody.setText(email.getBody());
+							break;
+						}
+					}
+					else
+						return;
+				}
 			}
-			else
-				return;
-		}
 		stxtBody.setText(email.getBody());
 		super.open();		
 	}

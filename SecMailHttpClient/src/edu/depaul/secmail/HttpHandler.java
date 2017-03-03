@@ -3,6 +3,7 @@ package edu.depaul.secmail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,7 +20,6 @@ import edu.depaul.secmail.content.*;
 public class HttpHandler implements Runnable {
 	private String responseHeaders = "HTTP/1.1 200 OK\r\n"
 			+ "Server: SecMail HTTP Server 1.0\r\n"
-			+ "Content-Type: text/html\r\n"
 			+ "Connection: Close\r\n";
 	private Socket clientSock;
 	private InputStream in;
@@ -117,8 +117,16 @@ public class HttpHandler implements Runnable {
 			if (method == RequestType.GET) {
 				//handle GET requests for text
 				if (acceptField.indexOf("text") >= 0) {
-					responseBody = handleGetRequest(path);
-					setResponseHeaders(new Integer(responseBody.length()).toString());
+					if (acceptField.indexOf("css") >= 0) {
+						responseBody = this.handleCss(path);
+						setResponseHeaders(new Integer(responseBody.length()).toString());
+						addToResponse("Content-Type: text/css\r\n");
+					}
+					else {
+						responseBody = handleGetRequest(path);
+						setResponseHeaders(new Integer(responseBody.length()).toString());
+						addToResponse("Content-Type: text/html\r\n");
+					}
 				}
 				//handle GET requests for images
 				else if (acceptField.indexOf("image") >= 0 ) {
@@ -142,6 +150,7 @@ public class HttpHandler implements Runnable {
 
 				responseBody = handlePostRequest(path);
 				setResponseHeaders(new Integer(responseBody.length()).toString());
+				addToResponse("Content-Type: text/html\r\n");
 			}
 			else setResponseHeaders();
 			
@@ -239,6 +248,20 @@ public class HttpHandler implements Runnable {
 		catch (IOException e) {System.out.println("bad file");}//TO DO -- do something better here
 		return null;
 		
+	}
+	
+	private String handleCss(String path) {
+		StringBuilder css = new StringBuilder();
+		try {
+			File f = new File(path.substring(1));
+			BufferedReader r = new BufferedReader(new FileReader(f));
+			String s;
+			while ((s = r.readLine()) != null) {
+				css.append(s);
+			}
+		}
+		catch (IOException e) {}
+		return css.toString();
 	}
 	//Robert Alianello
 	public boolean handleLogin(String username, String password) {
