@@ -300,6 +300,7 @@ public class EmailReader extends Shell {
 	@Override
 	public void open() 
 	{
+		boolean encryptSuccess = true;
 			if (email.isEncrypted())
 			{
 				for (int i = 0; i < 4; i++) {
@@ -309,14 +310,16 @@ public class EmailReader extends Shell {
 					{
 						if (email.decrypt(pd.getText())) {
 							stxtBody.setText(email.getBody());
+							encryptSuccess = true;
 							break;
 						}
+						else encryptSuccess = false;
 					}
 					else
 						return;
 				}
 			}
-		stxtBody.setText(email.getBody());
+		if (encryptSuccess) stxtBody.setText(email.getBody());
 		super.open();		
 	}
 
