@@ -13,6 +13,7 @@ public class HttpSession {
 	//Robert Alianello
 	protected static Map<String, Runnable> sessions = new HashMap<String, Runnable>(); //collection of all active sessions
 	private static Map<String, Long> sessionLog = new HashMap<String, Long>();
+	private static Object sessionLock = new Object(); //object used to lock access to both collections. Ensure only one thread at a time can modify both maps
 	//Robert Alianello
 	public static class sessionCleaner implements Runnable {
 		//Executes a session clean every 60 seconds which will remove inactive sessions from collection
@@ -59,8 +60,12 @@ public class HttpSession {
 		try {
 			Thread newUserSession = new MailServerConnection(id, username, s, io);
 			newUserSession.start();
-			sessions.put(id, newUserSession);
-			sessionLog.put(id, new Date().getTime());
+			//ensure thread safe
+			synchronized(sessionLock) {
+				sessions.put(id, newUserSession);
+				sessionLog.put(id, new Date().getTime());
+			}
+			
 		}
 		catch (Exception e) { return null; }
 		return id;
@@ -77,12 +82,15 @@ public class HttpSession {
 		return false;
 	}
 	//Robert Alianello
-	public static synchronized void remove(String id) {
+	public static void remove(String id) {
 		//make sure connections get closed
 		((MailServerConnection)sessions.get(id)).close();
-		//remove from session and session log
-		sessions.remove(id);
-		sessionLog.remove(id);
+		//needs to be synchronized so multiple threads can execute without damaging the data
+		synchronized(sessionLock) {
+			//remove from session and session log
+			sessions.remove(id);
+			sessionLog.remove(id);
+		}
 	}
 	
 	

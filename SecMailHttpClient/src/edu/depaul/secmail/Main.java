@@ -60,32 +60,7 @@ public class Main {
 
 	}
 	
-	//Robert Alianello
-	protected synchronized static boolean handleLogin(String username, String password) {
-		try {
-			Socket s = new Socket(host, port);
-			DHEncryptionIO io = new DHEncryptionIO(s, false);
-			io.writeObject(new PacketHeader(Command.LOGIN));
-			io.writeObject(username);
-			io.writeObject(password);
-			PacketHeader resp = (PacketHeader)io.readObject();
-			if (resp.getCommand() == Command.LOGIN_SUCCESS) {
-				//generate sessionID and store session. Add cookie to response
-				//startSession(username);
-				return true;
-			}
-			else {
-				io.writeObject(new PacketHeader(Command.CLOSE));
-				io.close();
-				s.close();
-				io = null;
-				return false;
-			}
-		}
-		catch (IOException e) { return false; }
-		catch (ClassNotFoundException e) { return false; }
-		
-	}
+
 	
 	public static String serve401() {
 		String header = "HTTP/1.1 200 OK\r\n"

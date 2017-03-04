@@ -18,8 +18,22 @@ public class MailServerConnection extends Thread {
 	}
 	
 	
-	public void run() {
-
+	public void run() { 
+		//use thread to ensure that the connection stayed open after logging in, then terminate thread
+		try {
+			secIO.writeObject(new PacketHeader(Command.CONNECT_TEST));
+			PacketHeader packet = (PacketHeader)secIO.readObject();
+			if (packet.getCommand() == Command.CONNECT_SUCCESS) System.out.println("Successfully connected client and started a new session");
+			else {
+				close();
+				HttpSession.remove(this.sessionID);
+			}
+		}
+		catch (IOException| ClassNotFoundException e) {
+			close();
+			HttpSession.remove(this.sessionID);
+			System.out.println("Error maintaining connection to main server");
+		}
 	}
 	
 	public void close() {
