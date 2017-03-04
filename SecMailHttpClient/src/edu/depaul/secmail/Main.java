@@ -69,7 +69,11 @@ public class Main {
 			io.writeObject(username);
 			io.writeObject(password);
 			PacketHeader resp = (PacketHeader)io.readObject();
-			if (resp.getCommand() == Command.LOGIN_SUCCESS) return true;
+			if (resp.getCommand() == Command.LOGIN_SUCCESS) {
+				//generate sessionID and store session. Add cookie to response
+				//startSession(username);
+				return true;
+			}
 			else {
 				io.writeObject(new PacketHeader(Command.CLOSE));
 				io.close();

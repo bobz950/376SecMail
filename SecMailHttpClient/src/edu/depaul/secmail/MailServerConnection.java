@@ -10,19 +10,16 @@ public class MailServerConnection extends Thread {
 	private String sessionID;
 	private String user;
 	
-	public MailServerConnection(String session, String user) {
+	public MailServerConnection(String session, String user, Socket s, DHEncryptionIO io) {
 		this.user = user;
 		this.sessionID = session;
+		this.s = s;
+		this.secIO = io;
 	}
 	
 	
 	public void run() {
-		try {
-			this.s = new Socket(Main.host, Main.port);
-			this.secIO = new DHEncryptionIO(s, false);
-		} 
-		catch (UnknownHostException e) { System.out.println("Could not connect to host"); } 
-		catch (IOException e) { System.out.println("IOException while creating input/output stream"); }
+
 	}
 	
 	public void close() {

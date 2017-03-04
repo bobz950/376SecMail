@@ -213,8 +213,8 @@ public class HttpHandler implements Runnable {
 		return null;
 	}
 	//Robert Alianello
-	public void startSession(String username) {
-		String sessionID = HttpSession.start(username);
+	public void startSession(String username, Socket s, DHEncryptionIO io) {
+		String sessionID = HttpSession.start(username, s, io);
 		addToResponse("Set-Cookie: SECMAILSESSIONID=" + sessionID);
 		
 	}
@@ -265,12 +265,28 @@ public class HttpHandler implements Runnable {
 	}
 	//Robert Alianello
 	public boolean handleLogin(String username, String password) {
-		if (Main.handleLogin(username, password)) {
-			//generate sessionID and store session. Add cookie to response
-			startSession(username);
-			return true;
+		try {
+			Socket s = new Socket(Main.host, Main.port);
+			DHEncryptionIO io = new DHEncryptionIO(s, false);
+			io.writeObject(new PacketHeader(Command.LOGIN));
+			io.writeObject(username);
+			io.writeObject(password);
+			PacketHeader resp = (PacketHeader)io.readObject();
+			if (resp.getCommand() == Command.LOGIN_SUCCESS) {
+				//generate sessionID and store session. Add cookie to response
+				startSession(username, s, io);
+				return true;
+			}
+			else {
+				io.writeObject(new PacketHeader(Command.CLOSE));
+				io.close();
+				s.close();
+				io = null;
+				return false;
+			}
 		}
-		return false;
+		catch (IOException e) { return false; }
+		catch (ClassNotFoundException e) { return false; }
 
 	}
 	//Robert Alianello

@@ -1,6 +1,7 @@
 package edu.depaul.secmail;
 
 import java.math.BigInteger;
+import java.net.Socket;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,11 +53,11 @@ public class HttpSession {
 		return new BigInteger(130, r).toString(32);
 	}
 	//Robert Alianello
-	public static String start(String username) {
+	public static String start(String username, Socket s, DHEncryptionIO io) {
 		//generates new session id, adds to sessions collection, returns session id to client
 		String id = generateSessionID();
 		try {
-			Thread newUserSession = new MailServerConnection(id, username);
+			Thread newUserSession = new MailServerConnection(id, username, s, io);
 			newUserSession.start();
 			sessions.put(id, newUserSession);
 			sessionLog.put(id, new Date().getTime());
