@@ -117,16 +117,17 @@ public class HttpHandler implements Runnable {
 			if (method == RequestType.GET) {
 				//handle GET requests for text
 				if (acceptField.indexOf("text") >= 0) {
-					if (acceptField.indexOf("css") >= 0) {
-						responseBody = this.handleCss(path);
-						setResponseHeaders(new Integer(responseBody.length()).toString());
-						addToResponse("Content-Type: text/css\r\n");
-					}
-					else {
+					if (acceptField.indexOf("html") >= 0) {
 						responseBody = handleGetRequest(path);
 						setResponseHeaders(new Integer(responseBody.length()).toString());
-						addToResponse("Content-Type: text/html\r\n");
+						addToResponse("Content-Type: text/html");
 					}
+					else if (acceptField.indexOf("css") >= 0) {
+						responseBody = this.handleScript(path);
+						setResponseHeaders(new Integer(responseBody.length()).toString());
+						addToResponse("Content-Type: text/css");
+					}
+
 				}
 				//handle GET requests for images
 				else if (acceptField.indexOf("image") >= 0 ) {
@@ -140,17 +141,26 @@ public class HttpHandler implements Runnable {
 					byte[] responseBytes = new byte[headerBytes.length + filesize];
 					int i;
 					for (i = 0; i < headerBytes.length; i++) responseBytes[i] = headerBytes[i];
-					for (int j = 0; i < filesize; i++, j++) responseBytes[i] = fileBytes[j];
+					for (int j = 0; j < filesize; i++, j++) responseBytes[i] = fileBytes[j];
 					out.write(responseBytes);
 					isText = false;
-					
+				}
+				else if (acceptField.indexOf("*/*") >= 0) {
+					if (path.length() > 3) {
+						String ext = path.substring(path.length() - 3);
+						if (ext.equals(".js")) {
+							responseBody = this.handleScript(path);
+							setResponseHeaders(new Integer(responseBody.length()).toString());
+							addToResponse("Content-Type: text/javascript; charset=UTF-8");
+						}
+					}
 				}
 			}
 			else if (method == RequestType.POST) {
 
 				responseBody = handlePostRequest(path);
 				setResponseHeaders(new Integer(responseBody.length()).toString());
-				addToResponse("Content-Type: text/html\r\n");
+				addToResponse("Content-Type: text/html");
 			}
 			else setResponseHeaders();
 			
@@ -228,6 +238,7 @@ public class HttpHandler implements Runnable {
 		if (path.equals("/")) return setResponseBody(new Home(this.mainConnection));
 		else if (path.equals("/whoami")) return setResponseBody(new LoggedInAs(this.mainConnection));
 		else if (path.equals("/signout")) return setResponseBody(new SignOut(this.mainConnection));
+		else if (path.contains(".js") || path.contains(".css")) return handleScript(path);
 		else return Main.serveBadRequest();
 	}
 	//Robert Alianello
@@ -243,25 +254,27 @@ public class HttpHandler implements Runnable {
 			FileInputStream reader = new FileInputStream(f);
 			bytes = new byte[(int)f.length()];
 			reader.read(bytes);
+			reader.close();
 			return bytes;
 		} 
 		catch (IOException e) {System.out.println("bad file");}//TO DO -- do something better here
 		return null;
 		
 	}
-	
-	private String handleCss(String path) {
-		StringBuilder css = new StringBuilder();
+	//Robert Alianello
+	private String handleScript(String path) {
+		StringBuilder script = new StringBuilder();
 		try {
 			File f = new File(path.substring(1));
 			BufferedReader r = new BufferedReader(new FileReader(f));
 			String s;
 			while ((s = r.readLine()) != null) {
-				css.append(s);
+				script.append(s);
 			}
+			r.close();
 		}
 		catch (IOException e) {}
-		return css.toString();
+		return script.toString();
 	}
 	//Robert Alianello
 	public boolean handleLogin(String username, String password) {

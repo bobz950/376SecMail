@@ -10,5 +10,6 @@ public class Home extends ResponseContent {
 		setContent("<h1>This is our homepage!..</h1>");
 		addContent("It sucks right now...");
 		addContent("<br><a href='/signout'>Sign Out</a>");
+		addContent("<img src='pizza.png'>");
 	}
 }

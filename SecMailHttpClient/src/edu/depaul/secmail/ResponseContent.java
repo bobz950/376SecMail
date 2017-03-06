@@ -7,7 +7,8 @@ import java.util.HashMap;
 
 public abstract class ResponseContent implements Content {
 	
-	private String htmlHeader = "<HTML><head><title>SecMail Web Client</title></head><body>";
+	private String htmlHeader = "<HTML><head><title>SecMail Web Client</title><link rel='stylesheet' type='text/css' href='/layouts/style.css'>"
+			+ "<script src='/layouts/jstest.js'></script></head><body>";
 	private String htmlFooter = "</body></HTML>";
 	private boolean useHtmlWrapper; //set to true if content should be wrapper in predefined html header and footer
 	protected MailServerConnection mainConnection; //main connection to the main server
