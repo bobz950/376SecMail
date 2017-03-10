@@ -1,0 +1,708 @@
+
+<!-- Melvin Kurian -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"> <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+    <!-- Web Font / @font-face : BEGIN -->
+    <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
+    <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
+    <!--[if mso]>
+        <style>
+            * {
+                font-family: sans-serif !important;
+            }
+        </style>
+    <![endif]-->
+    <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
+    <!--[if !mso]><!-->
+        <!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+    <!--<![endif]-->
+    <!-- Web Font / @font-face : END -->
+    <!-- CSS Reset -->
+    <style>		
+	p{
+		color:white;
+	
+	}
+        /* What it does: Remove spaces around the email design added by some email clients. */
+        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+        /* What it does: Stops email clients resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+        /* What it does: Centers email on Android 4.4 */
+        div[style*="margin: 16px 0"] {
+            margin:0 !important;
+        }
+        /* What it does: Stops Outlook from adding extra spacing to tables. */
+        div,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+        /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the first 2 tables then removes for anything nested deeper. */
+        div {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            margin: 0 auto !important;
+        }
+        div div div {
+            table-layout: auto;
+        }
+        /* What it does: Uses a better rendering method when resizing images in IE. */
+        img {
+            -ms-interpolation-mode:bicubic;
+        }
+        /* What it does: A work-around for iOS meddling in triggered links. */
+        *[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+        /* What it does: A work-around for Gmail meddling in triggered links. */
+        .x-gmail-data-detectors,
+        .x-gmail-data-detectors *,
+        .aBn {
+            border-bottom: 0 !important;
+            cursor: default !important;
+        }
+        /* What it does: Prevents Gmail from displaying an download button on large, non-linked images. */
+        .a6S {
+	        display: none !important;
+	        opacity: 0.01 !important;
+        }
+        /* If the above doesn't work, add a .g-img class to any image in question. */
+        img.g-img + div {
+	        display:none !important;
+	   	}
+        /* What it does: Prevents underlining the button text in Windows 10 */
+        .button-link {
+            text-decoration: none !important;
+        }
+        /* What it does: Removes right gutter in Gmail iOS app: https://github.com/TedGoas/Cerberus/issues/89  */
+        /* Create one of these media queries for each additional viewport size you'd like to fix */
+        /* Thanks to Eric Lepetit @ericlepetitsf) for help troubleshooting */
+        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) { /* iPhone 6 and 6+ */
+            .email-container {
+                min-width: 375px !important;
+            }
+        }
+    </style>
+    <!-- Progressive Enhancements -->
+    <style>
+        /* What it does: Hover styles for buttons */
+        .button-td,
+        .button-a {
+            transition: all 100ms ease-in;
+        }
+        .button-td:hover,
+        .button-a:hover {
+            background: #555555 !important;
+            border-color: #555555 !important;
+        }
+        /* Media Queries */
+        @media screen and (max-width: 480px) {
+            /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images beyond their max-width. */
+            .fluid {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+            /* What it does: Forces table cells into full-width rows. */
+            .stack-column,
+            .stack-column-center {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                direction: ltr !important;
+            }
+            /* And center justify these ones. */
+            .stack-column-center {
+                text-align: center !important;
+            }
+            /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+            .center-on-narrow {
+                text-align: center !important;
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                float: none !important;
+            }
+            div.center-on-narrow {
+                display: inline-block !important;
+            }
+        }
+	
+    </style>
+</head>
+
+<!-- 
+.scrollable {
+
+height: 69%;
+
+overflow: auto;
+
+} -->
+
+
+<body width="100%" bgcolor="#222222" style="margin: 0; mso-line-height-rule: exactly;">
+<div class="signoutButton" id="buttons">
+
+                                                <a href="signout" style="background: #222235; border: 15px solid #222222; font-family: sans-serif; font-size: 18px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                                    <span style="color:#ffffff;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;Sign Out&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </a>
+</div>
+    <div style="width: 100%; background: #222222; text-align: left;">
+       
+        <!--
+            Set the email width. Defined in two places:
+            1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 680px.
+            2. MSO tags for Desktop Windows Outlook enforce a 680px width.
+            Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
+        -->
+        <div style="max-width: 680px; margin: auto;" class="email-container">
+            <!-- Email Header : BEGIN -->
+            <div role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
+              <p>------------------------</p>
+                   
+                        <img src="layout/back.jpg" width="200" height="50" alt="alt_text" border="0" style="height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+						
+                    
+              <p>--------INBOX----------</p>
+            </div>
+            <!-- Email Header : END -->
+            <!-- Email Body : BEGIN -->
+            <div role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
+                <!-- Hero Image, Flush : BEGIN -->
+                <tr>
+                    <td bgcolor="#ffffff">
+                        <img src="layout/back.jpg" width="680" height="" alt="alt_text" border="0" align="center" class="fluid" style="width: 100%; max-width: 680px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;" class="g-img">
+                    </td>
+					
+                </tr>
+                <!-- Hero Image, Flush : END -->
+                <!-- 1 Column Text + Button : BEGIN -->
+                <tr>
+                    <td bgcolor="#ffffff">
+                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+						   <p>---------ONE------</p>
+						  
+                            <tr>
+                                <td style="padding: 40px; text-align: center; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                   <p> Section 1&nbsp;erat.</p>
+                                    <br><br>
+                                    <!-- Button : BEGIN -->
+                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
+									 <p>---------ONE------</p>
+                                        <tr>
+                                            <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
+                                                <a href="http://www.google.com" style="background: #222222; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                                    <span style="color:#ffffff;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;A Button&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </div>
+                                    <!-- Button : END -->
+                                </td>
+                            </tr>
+							   <p>--------TWO-----------</p>
+                        </div>
+                    </td>
+                </tr>
+                <!-- 1 Column Text + Button : END -->
+                <!-- Background Image with Text : BEGIN -->
+                <tr>
+                    <!-- Bulletproof Background Images c/o https://backgrounds.cm -->
+                    <td background="layout/back.jpg"" bgcolor="#222222" valign="middle" style="text-align: center; background-position: center center !important; background-size: cover !important;">
+                        <!--[if gte mso 9]>
+                        <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:680px;height:175px; background-position: center center !important;">
+                        <v:fill type="tile" src="http://placehold.it/680x230/222222/666666" color="#222222" />
+                        <v:textbox inset="0,0,0,0">
+                        <![endif]-->
+                        <div>
+                            <!--[if mso]>
+                            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="500">
+                            <tr>
+                            <td align="center" valign="top" width="500">
+                            <![endif]-->
+                            <div role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:500px; margin: auto;">
+                                <tr>
+                                    <td valign="middle" style="text-align: center; padding: 40px 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #ffffff;">
+                                        Can put Information here 
+                                    </td>
+                                </tr>
+								   <p>---------THREE------------</p>
+                            </div>
+                            <!--[if mso]>
+                            </td>
+                            </tr>
+                            </table>
+                            <![endif]-->
+                        </div>
+                        <!--[if gte mso 9]>
+                        </v:textbox>
+                        </v:rect>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <!-- Background Image with Text : END -->
+                <!-- 2 Even Columns : BEGIN -->
+                <tr>
+                    <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                        <!--[if mso]>
+                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                        <tr>
+                        <td align="center" valign="top" width="660">
+                        <![endif]-->
+						  
+                        <div role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:660px;">
+						   <p>-------------FOUR--------</p>
+                            <tr>
+                                <td align="center" valign="top" style="font-size:0; padding: 10px 0;">
+                                    <!--[if mso]>
+                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                                    <tr>
+                                    <td align="left" valign="top" width="330">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; width:100%; min-width:200px; max-width:330px; vertical-align:top;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="padding: 10px 10px;">
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+													   <p>-----------FIVE-------</p>
+                                                        <tr>
+                                                            <td>
+                                                                <img src="layout/back.jpg" width="310" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 310px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                            </td>
+                                                        </tr>
+														   <p>----------SIX--------</p>
+                                                        <tr>
+                                                            <td style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding-top: 10px;" class="stack-column-center">
+                                                                put info here 
+                                                            </td>
+                                                        </tr>
+														   <p>----------SEVEN------------</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    <td align="left" valign="top" width="330">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; width:100%; min-width:200px; max-width:330px; vertical-align:top;" class="stack-column">   <p>-----------EIGHT-----------</p>
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="padding: 10px 10px;">
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">   <p>-----------NINE-------------</p>
+                                                        <tr>
+                                                            <td>
+                                                                <img src="layout/back.jpg" width="310" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 310px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>   <p>-----------TEN-------------</p>
+                                                            <td style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding-top: 10px;" class="stack-column-center">
+                                                                put info here
+                                                            </td>
+                                                        </tr>   <p>-----------ELEVEN-------------</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </div>
+                        <!--[if mso]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <!-- 2 Even Columns : END -->
+                <!-- 3 Even Columns : BEGIN -->
+                <tr>
+                    <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%" style="padding: 10px 0;">
+                        <!--[if mso]>
+                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                        <tr>
+                        <td align="center" valign="top" width="660">
+                        <![endif]-->
+                        <div role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:660px;">
+                            <tr>
+                                <td align="center" valign="top" style="font-size:0;">
+                                    <!--[if mso]>
+                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                                    <tr>
+                                    <td align="left" valign="top" width="220">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width:33.33%; min-width:220px; vertical-align:top; width:100%;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="padding: 10px 10px;">
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                        <tr>
+                                                            <td>
+                                                                <img src="layout/back.jpg" width="200" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 200px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding-top: 10px;" class="stack-column-center">
+                                                                put info here
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </div>   <p>------------TWELVE------------</p>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    <td align="left" valign="top" width="220">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width:33.33%; min-width:220px; vertical-align:top; width:100%;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="padding: 10px 10px;">
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                        <tr>
+                                                            <td>
+                                                                <img src="layout/back.jpg" width="200" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 200px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding-top: 10px;" class="stack-column-center">
+                                                                Maecenas sed ante pellentesque, posuere leo id, eleifend dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </div>   <p>-------------THIRTEEN-----------</p>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    <td align="left" valign="top" width="220">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width:33.33%; min-width:220px; vertical-align:top; width:100%;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td style="padding: 10px 10px;">
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+													
+                                                        <tr>
+                                                            <td>
+                                                                <img src="layout/back.jpg" width="200" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 200px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                            </td>
+                                                        </tr><p>------------FOURTEEN------------</p>
+                                                        <tr>
+                                                            <td style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding-top: 10px;" class="stack-column-center">
+                                                       put info here
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>   <p>------------FOURTEEN------------</p>
+                                    <!--[if mso]>
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </div>
+                        <!--[if mso]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <!-- 3 Even Columns : END -->
+                <!-- Thumbnail Left, Text Right : BEGIN -->
+                <tr>
+                    <!-- dir=ltr is where the magic happens. This can be changed to dir=rtl to swap the alignment on wide while maintaining stack order on narrow. -->
+                    <td dir="ltr" bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%" style="padding: 10px 0;">
+                        <!--[if mso]>
+                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                        <tr>
+                        <td align="center" valign="top" width="660">
+                        <![endif]-->
+                        <div role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:660px;">
+                            <tr>
+                                <td align="center" valign="top" style="font-size:0; padding: 10px 0;">
+                                    <!--[if mso]>
+                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                                    <tr>
+                                    <td align="left" valign="top" width="220">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width: 200px; min-width:160px; vertical-align:top; width:100%;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td dir="ltr" style="padding: 0 10px 10px 10px;">
+                                                    <img src="layout/back.jpg" width="200" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 200px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    <td align="left" valign="top" width="440">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width:66.66%; min-width:320px; vertical-align:top;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td dir="ltr" style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
+                                                    <strong style="color:#111111;">Class aptent taciti sociosqu</strong>
+                                                    <br><br>
+                                                    Section 2
+                                                    <br><br>
+                                                    <!-- Button : Begin -->
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
+                                                        <tr>
+                                                            <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
+                                                                <a href="http://www.google.com" style="background: #222222; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                                                    <span style="color:#ffffff;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;A Button&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>   
+                                                    </div>
+													
+                                                    <!-- Button : END -->
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>   <p>--------FIFTEEN----------------</p>
+                                    <!--[if mso]>
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </div>
+                        <!--[if mso]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <!-- Thumbnail Left, Text Right : END -->
+                <!-- Thumbnail Right, Text Left : BEGIN -->
+                <tr>
+                    <!-- dir=rtl is where the magic happens. This can be changed to dir=ltr to swap the alignment on wide while maintaining stack order on narrow. -->
+                    <td dir="rtl" bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%" style="padding: 10px 0;">
+                        <!--[if mso]>
+                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                        <tr>
+                        <td align="center" valign="top" width="660">
+                        <![endif]-->
+                        <div role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:660px;">
+                            <tr>
+                                <td align="center" valign="top" style="font-size:0; padding: 10px 0;">
+                                    <!--[if mso]>
+                                    <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                                    <tr>
+                                    <td align="left" valign="top" width="220">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width: 200px; min-width:160px; vertical-align:top; width:100%;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td dir="ltr" style="padding: 0 10px 10px 10px;">
+                                                    <img src="layout/back.jpg" width="200" height="" border="0" alt="alt_text" class="center-on-narrow" style="width: 100%; max-width: 200px; height: auto; background: #dddddd; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    <td align="left" valign="top" width="440">
+                                    <![endif]-->
+                                    <div style="display:inline-block; margin: 0 -2px; max-width:66.66%; min-width:320px; vertical-align:top;" class="stack-column">
+                                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td dir="ltr" style="font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
+                                                    <strong style="color:#111111;">Class aptent taciti sociosqu</strong>
+                                                    <br><br>
+                                                   Section 3
+                                                    <br><br>
+                                                    <!-- Button : Begin -->
+                                                    <div role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
+                                                        <tr>
+                                                            <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
+                                                                <a href="http://www.google.com" style="background: #222222; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                                                    <span style="color:#ffffff;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;A Button&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                    <!-- Button : END -->
+                                                </td>
+                                            </tr>
+                                        </div>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </div>
+                        <!--[if mso]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <!-- Thumbnail Right, Text Left : END -->
+                <!-- Clear Spacer : BEGIN -->
+                <tr>
+                    <td height="40" style="font-size: 0; line-height: 0;">
+                        &nbsp;
+                    </td>
+                </tr>
+                <!-- Clear Spacer : END -->
+                <!-- 1 Column Text + Button : BEGIN -->
+                <tr>
+                    <td bgcolor="#ffffff">
+                        <div role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+						<p>--------SIXTEEN----------------</p>
+                            <tr>
+                                <td style="padding: 40px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+                                    put info here &nbsp;erat.
+                                </td>
+                                </tr>
+                        </div>
+                    </td>
+                </tr>
+                <!-- 1 Column Text + Button : BEGIN -->
+				
+				<p>--------SIXTEEN----------------</p>
+            </div>
+			
+			<p>--------SEVENTEEN----------------</p>
+            <!-- Email Body : END -->
+            <!-- Email Footer : BEGIN -->
+            <div role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
+                <tr>
+                    <td style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: sans-serif; line-height:18px; text-align: center; color: #888888;" class="x-gmail-data-detectors">
+                        <webversion style="color:#cccccc; text-decoration:underline; font-weight: bold;">View as a Web Page</webversion>
+                        <br><br>
+                        Company Name<br>123 Fake Street, SpringField, OR, 97477 US<br>(123) 456-7890
+                        <br><br>
+                        <unsubscribe style="color:#888888; text-decoration:underline;">unsubscribe</unsubscribe>
+                    </td>
+                </tr>
+            </div>
+            <!-- Email Footer : END -->
+            <!--[if mso]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </div>
+    </div>
+	<div class=" locApp" style="width: 90%; height=90%; "> 
+	<div style="width: 100%;">
+	<p>
+	<a href="https://www.bing.com/" style="background: #222222; background-color:#686868; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a" target="iframe_a">
+                                                                    <span style="color:#ffffff;font-size: larger;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;BING&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                                </a>
+	<!-- <a href="https://www.google.com" target="iframe_a">https://www.google.com</a> --></p>
+		 
+	<iframe height="100%" width="100%" src="https://www.bing.com/" name="iframe_a"></iframe>
+	
+	
+	<!-- <object type="text/html" data="https://www.google.com/" width="90%" height="90%" style="overflow:auto;border:5px ridge white">    </object> -->
+	
+	</div>
+	<!-- <div style=" width: 100%;"> -->
+	
+			 <!-- <!-- <object type="text/html" data="http://www.businessinsider.com/" width="90%" height="90%" style="overflow:auto;border:5px ridge white">    </object> --> 
+			 		 
+	<!-- <p><a href="https://www.youtube.com/" style="background: #222222; background-color:#686868; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a" target="iframe_b"> -->
+                                                                    <!-- <span style="color:#ffffff;font-size: larger;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;YouTube&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
+                                                                <!-- </a> -->
+	
+	<!-- <!-- <a href="https://www.businessinsider.com" target="iframe_a">https://www.businessinsider.com</a> </p> -->
+		 
+	<!-- <iframe height="100%" width="100%" src="https://www.youtube.com/" name="iframe_b"></iframe> -->
+
+			 <!-- </div> -->
+	
+	<div style=" width: 100%;">
+	
+			 <!-- <object type="text/html" data="http://www.businessinsider.com/" width="90%" height="90%" style="overflow:auto;border:5px ridge white">    </object> -->
+			 		 
+	<p><a href="https://www.bbc.com/news" style="background: #222222; background-color:#686868; border: 15px solid #222222; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a" target="iframe_c">
+                                                                    <span style="color:#ffffff;font-size: larger;" class="button-link">&nbsp;&nbsp;&nbsp;&nbsp;BBC NEWS&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                                </a>
+	
+	<!-- <a href="https://www.businessinsider.com" target="iframe_a">https://www.businessinsider.com</a> --></p>
+		 
+	<iframe height="100%" width="100%" src="https://www.bbc.com/news" name="iframe_c"></iframe>
+
+			 </div>
+	
+
+	
+	<!-- <table> -->
+<!-- <tr> -->
+<!-- <td> -->
+    <!-- <a href="/pdfs/test1.pdf" onmouseover="previewUrl(this.href,'div1')">google</a> -->
+<!-- </td> -->
+<!-- <td> -->
+    <!-- <div id="div1" style="width:400px;height:200px;border:1px solid #ddd;"></div> -->
+<!-- </td> -->
+<!-- </tr> -->
+<!-- </table> -->
+
+<!-- <script> -->
+    <!-- function previewUrl(url,target){ -->
+        <!-- //use timeout coz mousehover fires several times -->
+        <!-- clearTimeout(window.ht); -->
+        <!-- window.ht = setTimeout(function(){ -->
+            <!-- var div = document.getElementById(target); -->
+            <!-- div.innerHTML = '<iframe style="width:100%;height:100%;" frameborder="0" src="' + url + '" />'; -->
+        <!-- },20);       -->
+    <!-- }    -->
+<!-- </script> -->
+	
+	
+	<!-- this is the local app javascript -->
+<!-- <script>
+        $("#mydiv")
+            .html('<object data="http://your-website-domain"/>');
+</script> -->
+	
+</body>
+</html>
+	
