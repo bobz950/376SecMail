@@ -45,7 +45,7 @@ public class NotificationSender implements Runnable{
 	                io.close();
 	                remote.close();
                 } catch (IOException e) {
-                	Log.Error("Exception trying to send notificatio to user: "+n.getTo().compile());
+                	Log.Error("Exception trying to send notification to user: "+n.getTo().compile());
                 	Log.Error(e.toString());
                 }
             }

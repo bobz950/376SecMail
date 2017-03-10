@@ -23,6 +23,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class MailServerConnection extends Thread {
 	private Socket s;
 	private DHEncryptionIO secIO;
@@ -74,16 +77,16 @@ public class MailServerConnection extends Thread {
     		File f = new File(MainWindow.getMailDir() + n.getID());
     		
     		//make packet header to send to client
-			PacketHeader getEmailHeader = new PacketHeader(Command.SEND_EMAIL);
+			PacketHeader getEmailHeader = new PacketHeader(Command.RECIEVE_EMAIL);
 			//send packet header to server
 			io.writeObject(getEmailHeader);
-			//send ID to server 
+			//send ID to Client connected to server 
 			io.writeObject(n.getID());
 			//send from user to server for email receipt
 			io.writeObject(n.getFrom());
 			
 			PacketHeader responsePacket = (PacketHeader) io.readObject();
-			if(responsePacket.getCommand() == Command.RECEIVE_EMAIL){
+			if(responsePacket.getCommand() == Command.RECIEVE_EMAIL){
 				//server sends back the email / packet header
 				EmailStruct email = (EmailStruct)io.readObject();
 				email.writeToFile(f);
@@ -113,10 +116,42 @@ public class MailServerConnection extends Thread {
 		
 		Shell noEmail = new Shell();
 		MessageBox messageBox = new MessageBox(noEmail, SWT.OK);
-		messageBox.setMessage("Email is no longer on server. Sorry!");		
+		messageBox.setMessage("Email is no longer on server, Need to restart connection.");		
 		messageBox.open();
 	}
         
         
-        
+	//Rohail Baig
+		//Searching through emails.	
+		public void handleSearchByKey(String oldVal, String newVal) {
+			// If the number of characters in the text box is less than last time
+			// it must be because the user pressed delete
+			if ( oldVal != null && (newVal.length() < oldVal.length()) ) {
+				// Restore the lists original set of entries, and start from the beginning
+				list.setItems(entries);
+				}
+				     
+			 // Break out all of the parts of the search text by splitting on white space 
+			 
+			String[] parts = newVal.toUpperCase().split(" ");
+				 
+				    // Filter out the entries which do not contain the entered text
+			ObservableList<String> subentries = FXCollections.observableArrayList();
+			for ( Object entry: list.getItems() ) {
+				boolean match = true;
+				String entryText = (String)entry;
+				for ( String part: parts ) {
+				    // The entry needs to contain all portions of the search string in any order
+				    if ( ! entryText.toUpperCase().contains(part) ) {
+				    	match = false;
+				    	break;
+				    	}
+				    }
+				 
+				        if ( match ) {
+				            subentries.add(entryText);
+				        }
+				    }
+				    list.setItems(subentries);
+				}
 }
