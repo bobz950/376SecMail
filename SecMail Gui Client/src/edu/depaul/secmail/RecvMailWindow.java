@@ -234,21 +234,46 @@ public class RecvMailWindow extends Shell {
 		
 		try{
 			PacketHeader notifPacket = (PacketHeader) io.readObject();
-			System.out.println(notifPacket.getCommand());		//NO_NOTIFICATION
-			//not sure what to do with the packet header... 
 			
-			LinkedList notifications = (LinkedList) io.readObject();
-			while(!notifications.isEmpty()){
-				Notification n = (Notification) notifications.pop();
-				System.out.println(n.getType());	//NEW_EMAIL or EMAIL_RECEIVED
-				//if type is EMAIL_RECEIVED the email is "no longer on the server"
-				this.addNewTableItem(tblNewMail, n, false);
-				//TODO distinguish between newMail and sentMail, put in corresponding table.
+			if(!notifPacket.getCommand().equals(Command.NO_NOTIFICATIONS)){
+				noNotificationsMessageBox();
 			}
+			else{
+				LinkedList<Notification> notifications = (LinkedList<Notification>) io.readObject();
+				while(!notifications.isEmpty()){
+					Notification n = (Notification) notifications.pop();
+					boolean read = false;
+					
+					if(n.getType().equals(NotificationType.NEW_EMAIL)){
+						//don't add duplicates (this works now)
+						if(!hasTableItem(tblNewMail, n)){
+							if(new File(MainWindow.getMailDir() + n.getID()).exists() )
+								read = true;
+							this.addNewTableItem(tblNewMail, n, read);
+						}
+					}else if(n.getType().equals(NotificationType.EMAIL_RECEIVED)){
+						if(!hasTableItem(tblSentMail, n))
+							this.addNewTableItem(tblSentMail, n, true);		//always true?
+					}
+				}
+			}
+
 		}catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//Evan Schirle
+	private boolean hasTableItem(Table table, Notification n)
+	{
+		//check to see if we already have the table item with this Notification
+		for(TableItem item : table.getItems()){
+			Notification nItem = (Notification)item.getData();
+			if( nItem.getSubject().equals(n.getSubject()) && nItem.getDate().equals(n.getDate()) )
+				return true;
+		}
+		return false;
 	}
 	
 	//Jacob Burkamper
