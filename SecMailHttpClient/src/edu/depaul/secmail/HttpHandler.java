@@ -238,12 +238,16 @@ public class HttpHandler implements Runnable {
 		if (path.equals("/")) return setResponseBody(new Home(this.mainConnection));
 		else if (path.equals("/whoami")) return setResponseBody(new LoggedInAs(this.mainConnection));
 		else if (path.equals("/signout")) return setResponseBody(new SignOut(this.mainConnection));
+		else if (path.equals("/inbox")) return setResponseBody(new Inbox(this.mainConnection));
+		else if (path.equals("/newemail")) return setResponseBody(new SendEmail(this.mainConnection));
 		else if (path.contains(".js") || path.contains(".css")) return handleScript(path);
 		else return Main.serveBadRequest();
 	}
 	//Robert Alianello
 	private String handlePostRequest(String path) {
 		if (path.equals("/signin")) return setResponseBody(new SignIn(this.mainConnection, this));
+		if (path.equals("/readmail")) return setResponseBody(new ReadEmail(this.mainConnection, this));
+		if (path.equals("/sendmail")) return setResponseBody(new ProcessEmail(this.mainConnection, this));
 		else return Main.serveBadRequest();
 	}
 	//Robert Alianello
