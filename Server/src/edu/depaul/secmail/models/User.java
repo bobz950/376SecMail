@@ -1,17 +1,36 @@
 package edu.depaul.secmail.models;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 public class User implements DBModel {
 
-	private final int userID;
-	private final String userAddress;
-	private final String userPassword;
-	private final String userSalt;
+	private int userID;
+	private String userAddress;
+	private String userPassword;
+	private String userSalt;
 	
-	public User(int userID, String userAddress, String userPassword, String userSalt){
+	public User(int userID, String userAddress, String userPassword){
 		this.userID = userID;
 		this.userAddress = userAddress;
 		this.userPassword =userPassword;
-		this.userSalt = userSalt;
+		try {
+			setSalt();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public User(String userAddress, String userPassword){
+		this.userAddress = userAddress;
+		this.userPassword =userPassword;
+		try {
+			setSalt();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		hashPassword();
 	}
 
 	public String getUserAddress() {
@@ -48,6 +67,30 @@ public class User implements DBModel {
 	@Override
 	public void dbWrite() {
 		
+		
+	}
+	
+	private void setSalt() throws NoSuchAlgorithmException{
+		SecureRandom sr = SecureRandom.getInstance("SHAPRNG");
+		byte[] salt = new byte[16];
+		sr.nextBytes(salt);
+		userSalt = salt.toString();
+	}
+	
+	private void hashPassword(){
+		String generatedPassword = null;
+		try{
+			MessageDigest md =MessageDigest.getInstance("MD5");
+			md.update(userSalt.getBytes());
+			byte[] passwordBytes = md.digest(userPassword.getBytes());
+			StringBuilder sb = new StringBuilder();
+			for (int i =0; i < passwordBytes.length; i++){
+				sb.append(Integer.toString((passwordBytes[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			generatedPassword = sb.toString();
+		} catch (NoSuchAlgorithmException e){
+			e.printStackTrace();
+		}
 		
 	}
 
