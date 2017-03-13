@@ -38,7 +38,7 @@ public class EmailStruct implements Serializable{
 	private transient FileOutputStream fos;
 	
 	//default empty constructor.
-	public EmailStruct()
+	EmailStruct()
 	{
 		
 	}

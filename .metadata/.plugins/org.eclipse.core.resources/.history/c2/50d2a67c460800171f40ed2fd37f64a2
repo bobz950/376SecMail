@@ -170,7 +170,7 @@ public class Message implements DBModel {
 	
 	public EmailStruct toEmailStruct(){
 		EmailStruct emailStruct = new EmailStruct();
-		return null;
+		
 	}
 
 }

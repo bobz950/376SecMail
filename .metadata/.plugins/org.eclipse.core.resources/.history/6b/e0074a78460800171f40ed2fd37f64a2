@@ -127,18 +127,15 @@ public class Message implements DBModel {
 				
 				messageID = rs.getInt(1);
 				
-				// Write into message_recipient table for each message recipient
-				for (User recipient : recipients){
-					String messageRecipientSqlQuery = "INSERT INTO message_recipient VALUES ("+ recipient.getID() + ", " + rs.getInt(1) + ")";
-					stmt = conn.prepareStatement(messageRecipientSqlQuery);
-					int rsMR= stmt.executeUpdate();
-					if (rsMR != 0){
-						System.out.println("Insert message_recipient success");
-					} else {
-						System.out.println("Insert message_recipient fail");
-					}
+				// write into message recipient db table
+				String messageRecipientSqlQuery = "INSERT INTO message_recipient VALUES ("+ recipient.getID() + ", " + rs.getInt(1) + ")";
+				stmt = conn.prepareStatement(messageRecipientSqlQuery);
+				int rsMR= stmt.executeUpdate();
+				if (rsMR != 0){
+					System.out.println("Insert message_recipient success");
+				} else {
+					System.out.println("Insert message_recipient fail");
 				}
-				
 			} else {
 				System.out.println("Insert message fail");
 			}
@@ -170,7 +167,7 @@ public class Message implements DBModel {
 	
 	public EmailStruct toEmailStruct(){
 		EmailStruct emailStruct = new EmailStruct();
-		return null;
+		
 	}
 
 }

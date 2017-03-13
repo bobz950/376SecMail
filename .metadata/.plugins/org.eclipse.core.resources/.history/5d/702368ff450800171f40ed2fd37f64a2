@@ -16,7 +16,7 @@ public class Message implements DBModel {
 
 	private int messageID;
 	private User sender;
-	private ArrayList<User> recipients;
+	private User recipient;
 	private String subject;
 	private String content;
 	// Message Attachment
@@ -28,7 +28,7 @@ public class Message implements DBModel {
 	public Message(int messageID, User sender, User recipient, String subject, String content, Date messageDate){
 		this.messageID = messageID;
 		this.sender = sender;
-		recipients.add(recipient);
+		this.recipient = recipient;
 		this.subject = subject;
 		this.content = content;
 		this.messageDate = messageDate;
@@ -38,7 +38,7 @@ public class Message implements DBModel {
 	
 	public Message(User sender, User recipient, String subject, String content, Date messageDate){
 		this.sender = sender;
-		recipients.add(recipient);
+		this.recipient = recipient;
 		this.subject = subject;
 		this.content = content;
 		this.messageDate = messageDate;
@@ -48,17 +48,13 @@ public class Message implements DBModel {
 		return sender;
 	}
 
-	public ArrayList<User> getRecipient() {
-		return recipients;
-	}
-	
-	public void addRecipient(User recipient){
-		recipients.add(recipient);
+	public User getRecipient() {
+		return recipient;
 	}
 
 	@Override
 	public String toString() {
-		return "Message [messageID=" + messageID + ", sender=" + sender + ", recipient=" + recipients + ", subject="
+		return "Message [messageID=" + messageID + ", sender=" + sender + ", recipient=" + recipient + ", subject="
 				+ subject + ", content=" + content + ", messageDate=" + messageDate + ", tags=" + tags + ", hasRead="
 				+ hasRead + "]";
 	}
@@ -127,18 +123,15 @@ public class Message implements DBModel {
 				
 				messageID = rs.getInt(1);
 				
-				// Write into message_recipient table for each message recipient
-				for (User recipient : recipients){
-					String messageRecipientSqlQuery = "INSERT INTO message_recipient VALUES ("+ recipient.getID() + ", " + rs.getInt(1) + ")";
-					stmt = conn.prepareStatement(messageRecipientSqlQuery);
-					int rsMR= stmt.executeUpdate();
-					if (rsMR != 0){
-						System.out.println("Insert message_recipient success");
-					} else {
-						System.out.println("Insert message_recipient fail");
-					}
+				// write into message recipient db table
+				String messageRecipientSqlQuery = "INSERT INTO message_recipient VALUES ("+ recipient.getID() + ", " + rs.getInt(1) + ")";
+				stmt = conn.prepareStatement(messageRecipientSqlQuery);
+				int rsMR= stmt.executeUpdate();
+				if (rsMR != 0){
+					System.out.println("Insert message_recipient success");
+				} else {
+					System.out.println("Insert message_recipient fail");
 				}
-				
 			} else {
 				System.out.println("Insert message fail");
 			}
@@ -165,12 +158,7 @@ public class Message implements DBModel {
 					se.printStackTrace();
 				}
 		}
-	}
-	
-	
-	public EmailStruct toEmailStruct(){
-		EmailStruct emailStruct = new EmailStruct();
-		return null;
+		
 	}
 
 }
