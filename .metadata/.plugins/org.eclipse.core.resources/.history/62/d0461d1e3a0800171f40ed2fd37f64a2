@@ -52,13 +52,6 @@ public class Message implements DBModel {
 		return recipient;
 	}
 
-	@Override
-	public String toString() {
-		return "Message [messageID=" + messageID + ", sender=" + sender + ", recipient=" + recipient + ", subject="
-				+ subject + ", content=" + content + ", messageDate=" + messageDate + ", tags=" + tags + ", hasRead="
-				+ hasRead + "]";
-	}
-
 	public String getSubject() {
 		return subject;
 	}
@@ -98,7 +91,7 @@ public class Message implements DBModel {
 
 	@Override
 	public void dbWrite() {
-		String messageSqlQuery = "INSERT INTO message VALUES (0,  "+sender.getID() + ", \"" + subject + "\", + \""+content + "\", + \"null\", + null)";
+		String messageSqlQuery = "INSERT INTO message VALUES (0,  "+sender + ", \"" + subject + "\", + \""+content + "\", + \"null\", + null)";
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -124,7 +117,8 @@ public class Message implements DBModel {
 				messageID = rs.getInt(1);
 				
 				// write into message recipient db table
-				String messageRecipientSqlQuery = "INSERT INTO message_recipient VALUES ("+ recipient.getID() + ", " + rs.getInt(1) + ")";
+				String messageRecipientSqlQuery = "INSERT INTO message_recipient VALUES ("+ recipient + ", " + rs.getInt(1) + ")";
+				System.out.println(messageRecipientSqlQuery);
 				stmt = conn.prepareStatement(messageRecipientSqlQuery);
 				int rsMR= stmt.executeUpdate();
 				if (rsMR != 0){

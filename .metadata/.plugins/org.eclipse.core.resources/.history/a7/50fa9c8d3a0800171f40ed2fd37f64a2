@@ -2,7 +2,6 @@ package edu.depaul.secmail;
 
 import java.sql.*;
 
-import edu.depaul.secmail.models.Message;
 import edu.depaul.secmail.models.User;
 
 public class DBCon {
@@ -22,17 +21,10 @@ public class DBCon {
 		//insertTag("SecMail");
 		//getAllMessages();
 		//getRemoteConnection();
-		
-		
 		User x = new User("Username", "Password");
-		//System.out.println(x.toString());
+		System.out.println(x.toString());
 		x.dbWrite();
-		//System.out.println(x.toString());
-	
-		Message m = new Message(x, x, "Subject", "Content", null);
-		System.out.println(m.toString());
-		m.dbWrite();
-		System.out.println(m.toString());
+		System.out.println(x.toString());
 	}
 	
 	// Return Connection to AWS Server

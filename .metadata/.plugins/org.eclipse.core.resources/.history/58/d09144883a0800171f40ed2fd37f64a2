@@ -119,7 +119,6 @@ public class User implements DBModel {
 		
 	}
 	
-	// Generates a salt and saves it 
 	private void setSalt() throws NoSuchAlgorithmException{
 		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
 		byte[] salt = new byte[16];
@@ -127,7 +126,6 @@ public class User implements DBModel {
 		userSalt = salt.toString();
 	}
 	
-	// hashes the password
 	private void hashPassword(){
 		String generatedPassword = null;
 		try{
