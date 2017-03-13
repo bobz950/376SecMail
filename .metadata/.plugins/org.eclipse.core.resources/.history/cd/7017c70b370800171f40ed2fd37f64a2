@@ -3,7 +3,10 @@ package edu.depaul.secmail.models;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import edu.depaul.secmail.DBCon;
 
@@ -73,6 +76,9 @@ public class User implements DBModel {
 	public void dbWrite() {
 		if (userID == 0){
 			
+			// DB connection object
+			DBCon dbcon = new DBCon();
+			
 			String sql = "INSERT INTO user VALUES (0,  \""+userAddress + "\", \"" + userPassword + "\", \"" + userSalt + "\")";
 			
 			java.sql.Connection conn = null;
@@ -81,12 +87,12 @@ public class User implements DBModel {
 			try{
 				// Open a Connection
 				System.out.println("Connecting to database...");
-				conn = DBCon.getRemoteConnection();
+				conn = dbcon.getRemoteConnection();
 				
 				// Execute query 
 				System.out.println("Creating statement...");
 				stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				stmt.executeUpdate();
+				stmt.executeQuery();
 				ResultSet rs = stmt.getGeneratedKeys();
 				
 				// set userID from newly inserted row
@@ -137,10 +143,10 @@ public class User implements DBModel {
 				sb.append(Integer.toString((passwordBytes[i] & 0xff) + 0x100, 16).substring(1));
 			}
 			generatedPassword = sb.toString();
-			userPassword = generatedPassword;
 		} catch (NoSuchAlgorithmException e){
 			e.printStackTrace();
 		}
+		
 	}
 
 }

@@ -86,7 +86,7 @@ public class User implements DBModel {
 				// Execute query 
 				System.out.println("Creating statement...");
 				stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				stmt.executeUpdate();
+				stmt.executeQuery();
 				ResultSet rs = stmt.getGeneratedKeys();
 				
 				// set userID from newly inserted row
@@ -137,10 +137,10 @@ public class User implements DBModel {
 				sb.append(Integer.toString((passwordBytes[i] & 0xff) + 0x100, 16).substring(1));
 			}
 			generatedPassword = sb.toString();
-			userPassword = generatedPassword;
 		} catch (NoSuchAlgorithmException e){
 			e.printStackTrace();
 		}
+		
 	}
 
 }

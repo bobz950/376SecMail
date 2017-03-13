@@ -15,20 +15,16 @@ public class DBCon {
     static final String jdbcUrl = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
 	
 	public static void main(String[] args){
-		//addUser("Will", "password");
-		//getAllUsers();
-		//insertMessage("1", "1", "Hello Subject", "Hello Content",  "null");
+		addUser("Will", "password");
+		getAllUsers();
+		insertMessage("1", "1", "Hello Subject", "Hello Content",  "null");
 		//insertTag("SecMail");
-		//getAllMessages();
+		getAllMessages();
 		//getRemoteConnection();
-		User x = new User("Username", "Password");
-		System.out.println(x.toString());
-		x.dbWrite();
-		System.out.println(x.toString());
 	}
 	
 	// Return Connection to AWS Server
-	public static Connection getRemoteConnection() {
+	private static Connection getRemoteConnection() {
 	    if (true) {
 	      try {
 	      Class.forName(JDBC_DRIVER);
@@ -88,7 +84,7 @@ public class DBCon {
 				int id = rs.getInt("user_id");
 				String userAddress= rs.getString("user_address");
 				String userPassword = rs.getString("user_password");
-				User user = new User(id, userAddress, userPassword);
+				User user = new User(id, userAddress, userPassword, "SALT");
 				
 				System.out.println(user.toString());
 				

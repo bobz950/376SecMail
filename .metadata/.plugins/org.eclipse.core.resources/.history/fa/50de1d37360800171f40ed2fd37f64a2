@@ -3,9 +3,6 @@ package edu.depaul.secmail.models;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.*;
-
-import edu.depaul.secmail.DBCon;
 
 public class User implements DBModel {
 
@@ -71,56 +68,12 @@ public class User implements DBModel {
 
 	@Override
 	public void dbWrite() {
-		if (userID == 0){
-			
-			String sql = "INSERT INTO user VALUES (0,  \""+userAddress + "\", \"" + userPassword + "\", \"" + userSalt + "\")";
-			
-			java.sql.Connection conn = null;
-			PreparedStatement stmt = null;
-			
-			try{
-				// Open a Connection
-				System.out.println("Connecting to database...");
-				conn = DBCon.getRemoteConnection();
-				
-				// Execute query 
-				System.out.println("Creating statement...");
-				stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				stmt.executeUpdate();
-				ResultSet rs = stmt.getGeneratedKeys();
-				
-				// set userID from newly inserted row
-				if (rs.next()){
-					System.out.println("Insert User Success");
-					userID = rs.getInt(1);
-				}
-				
-				// Clean up connection
-				stmt.close();
-				conn.close();
-			} catch (SQLException se){
-				// handle errors for JDBC
-				se.printStackTrace();
-			} catch (Exception e){
-				// handle errors for Class.forName
-				e.printStackTrace();
-			} finally {
-				// close resources
-				try{
-					if (stmt != null) stmt.close();
-				} catch (SQLException se2){}
-				try {
-					if (conn != null) conn.close();
-				} catch (SQLException se){
-					se.printStackTrace();
-				}
-			}
-		}
+		
 		
 	}
 	
 	private void setSalt() throws NoSuchAlgorithmException{
-		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+		SecureRandom sr = SecureRandom.getInstance("SHAPRNG");
 		byte[] salt = new byte[16];
 		sr.nextBytes(salt);
 		userSalt = salt.toString();
@@ -137,10 +90,10 @@ public class User implements DBModel {
 				sb.append(Integer.toString((passwordBytes[i] & 0xff) + 0x100, 16).substring(1));
 			}
 			generatedPassword = sb.toString();
-			userPassword = generatedPassword;
 		} catch (NoSuchAlgorithmException e){
 			e.printStackTrace();
 		}
+		
 	}
 
 }
