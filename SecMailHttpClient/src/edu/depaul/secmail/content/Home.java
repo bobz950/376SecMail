@@ -12,26 +12,7 @@ public class Home extends ResponseContent {
 
 	public Home(MailServerConnection c) {
 		super(true, c);
-		// Melvin Kurian
-		String homePageHtml;
-		FileReader fr = null;
-		try {
-			fr = new FileReader("layout/homePage.html");
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		BufferedReader br = new BufferedReader(fr);
-		StringBuilder content = new StringBuilder(1024);
-		try {
-			while ((homePageHtml = br.readLine()) != null) {
-				content.append(homePageHtml);
-			}
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-		homePageHtml = content.toString();
-
-		setContent(homePageHtml);
+		setContent("<p><b>Welcome to the home page</b></p>");
+		addContent("Bye bye");
 	}
 }

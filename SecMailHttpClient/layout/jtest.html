@@ -1,0 +1,17 @@
+<script>
+		function promptPass() {
+            //var pass = prompt("This email is encrypted. Type the password to read it : ", "pass");
+            //document.getElementById("pass").value = pass;
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("pass").innerHTML = this.responseText;
+				}
+			};
+			xhttp.open("GET", "http://localhost:5000/", true);
+			xhttp.send();
+		}
+</script>
+<div width="500px" height="500px" id="pass" type="text">tehehe<div>
+<button type="button" onclick="promptPass()">do it</button>
+

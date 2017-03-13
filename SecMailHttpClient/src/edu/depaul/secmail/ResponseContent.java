@@ -2,14 +2,16 @@
 //This abstract class is meant to be extended by classes that produce the content to be output to the browser
 package edu.depaul.secmail;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class ResponseContent implements Content {
 	
-	private String htmlHeader = "<HTML><head><title>SecMail Web Client</title><link rel='stylesheet' type='text/css' href='/layouts/style.css'>"
-			+ "<script src='/layouts/jstest.js'></script></head><body>";
-	private String htmlFooter = "</body></HTML>";
+	private String htmlHeader = "";
+	private String htmlFooter = "";
 	private boolean useHtmlWrapper; //set to true if content should be wrapper in predefined html header and footer
 	protected MailServerConnection mainConnection; //main connection to the main server
 	private String content = "";
@@ -18,9 +20,17 @@ public abstract class ResponseContent implements Content {
 	private ArrayList<String> addedResponseHeaders;//any added response headers
 	
 	public ResponseContent(boolean useWrapper, MailServerConnection c) {
-		
 		this.useHtmlWrapper = useWrapper;
 		this.mainConnection = c;
+		try {
+			BufferedReader r = new BufferedReader(new FileReader("layout/templateHeader.html"));
+			String l;
+			while((l = r.readLine()) != null) htmlHeader += l;
+			r = new BufferedReader(new FileReader("layout/templateFooter.html"));
+			while((l = r.readLine()) != null) htmlFooter += l;
+		} 
+		catch (IOException e) {}
+		
 	}
 
 	public void setContent(String s) {

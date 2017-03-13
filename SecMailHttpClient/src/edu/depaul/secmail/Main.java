@@ -63,7 +63,17 @@ public class Main {
 
 	}
 	
-
+	public static UserStruct makeUser(String s) {
+		return new UserStruct(s);
+	}
+	
+	public static PacketHeader makePH(Command c) {
+		return new PacketHeader(c);
+	}
+	
+	public static EmailStruct makeEmail() {
+		return new EmailStruct();
+	}
 	
 	public static String serve401() {
 		String header = "HTTP/1.1 200 OK\r\n"
@@ -87,7 +97,7 @@ public class Main {
 		FileReader fr = null;
 		FileReader cssRead = null;
 		try {
-			fr = new FileReader("layout/loginWindow.html");
+			fr = new FileReader("layout/LoginPage.html");
 		} catch (FileNotFoundException e1) {
 
 			e1.printStackTrace();
