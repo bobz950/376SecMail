@@ -1,5 +1,6 @@
 package edu.depaul.secmail.models;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -95,7 +96,11 @@ public class Message implements DBModel {
 
 	@Override
 	public int getID() {
-		return Integer.parseInt(messageID);
+		return messageID.hashCode();
+	}
+	
+	public String getMessageID() {
+		return messageID;
 	}
 
 	@Override

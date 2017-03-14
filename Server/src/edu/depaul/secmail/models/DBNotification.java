@@ -257,7 +257,7 @@ public class DBNotification {
 				Message message = Message.getMessageByID(rs.getString("message_id"));
 				Date messageDate = rs.getDate("message_date");
 		
-				notification = new DBNotification(id, recipient, recipient, message.getSubject(), new Integer(message.getID()).toString(), messageDate);
+				notification = new DBNotification(id, recipient, recipient, message.getSubject(), message.getMessageID(), messageDate);
 				dbNotificationArrayList.add(notification);
 			}
 			

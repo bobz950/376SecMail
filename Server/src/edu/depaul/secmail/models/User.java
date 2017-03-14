@@ -47,6 +47,7 @@ public class User implements DBModel {
 		this.userAddress = user;
 		this.userPassword = null;
 		this.userSalt = null;
+		this.userID = getUserIDFromDB(user);
 	}
 
 	public String getUserAddress() {
@@ -282,6 +283,24 @@ public class User implements DBModel {
 		else {
 			System.out.println("Failed login attempt");
 			return false;
+		}
+	}
+	
+	public static int getUserIDFromDB(String username) {
+		String query = "SELECT user_id FROM user WHERE user_address=?;";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = DBCon.getRemoteConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, username);
+			
+			ResultSet r = stmt.executeQuery();
+			int id = 0;
+			if (r.next()) id = r.getInt("user_id");
+			return id;
+		} catch (SQLException e) {
+			return 0;
 		}
 	}
 
