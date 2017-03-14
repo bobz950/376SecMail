@@ -3,6 +3,7 @@
 package edu.depaul.secmail;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import edu.depaul.secmail.models.DBNotification;
 import edu.depaul.secmail.models.Message;
@@ -28,42 +29,43 @@ public class DBCon {
 		//getRemoteConnection();
 		
 		
-		User x = new User("Username", "Password");
+		//User x = new User("Username", "Password");
 		//System.out.println(x.toString());
-		x.dbWrite();
-		//System.out.println(x.toString());
-		
-		User x2 = new User("Username2", "Password");
-		//System.out.println(x.toString());
-		x2.dbWrite();
+		//x.dbWrite();
 		//System.out.println(x.toString());
 		
-		User x3 = new User("Username3", "Password");
+		//User x2 = new User("Username5", "Password");
 		//System.out.println(x.toString());
-		x3.dbWrite();
-		//System.out.println(x.toString());
-		
-		User x4 = new User("Username4", "Password");
-		//System.out.println(x.toString());
-		x4.dbWrite();
+		//x2.dbWrite();
 		//System.out.println(x.toString());
 		
-		System.out.println(User.getUserFromID(1));
-		System.out.println(User.getUserFromAddress("Username"));
+		//User x3 = new User("Username3", "Password");
+		//System.out.println(x.toString());
+		//x3.dbWrite();
+		//System.out.println(x.toString());
 		
-		System.out.println(User.getUserFromID(2));
-		System.out.println(User.getUserFromAddress("Username2"));
+		//User x4 = new User("Username4", "Password");
+		//System.out.println(x.toString());
+		//x4.dbWrite();
+		//System.out.println(x.toString());
 		
-		System.out.println(User.getUserFromID(3));
-		System.out.println(User.getUserFromAddress("Username3"));
+		//User x = User.getUserFromID(1);
+		//System.out.println(x);
+		//System.out.println(User.getUserFromAddress("Username"));
 		
-		System.out.println(User.getUserFromID(4));
-		System.out.println(User.getUserFromAddress("Username4"));
+		//System.out.println(x2);
+		//System.out.println(User.getUserFromAddress("Username2"));
+		
+		//System.out.println(User.getUserFromID(3));
+		//System.out.println(User.getUserFromAddress("Username3"));
+		
+		//System.out.println(User.getUserFromID(4));
+		//System.out.println(User.getUserFromAddress("Username4"));
 	
-		//Message m = new Message(x, x, "Subject", "Content", new Date(0));
+		//Message m = new Message(x, x2, "Subject", "Content", new Date(0));
 		//System.out.println(m.toString());
-		//m.addRecipient(x);
-		//m.addRecipient(x);
+		//m.addRecipient(x3);
+		//m.addRecipient(x4);
 		//m.dbWrite();
 		//System.out.println(m.toString());
 		
@@ -78,7 +80,12 @@ public class DBCon {
 		//System.out.println(dbn.toString());
 		
 
-	
+		
+		//System.out.println(Message.getMessageByID(7));
+		ArrayList<DBNotification> notifications = DBNotification.getDBNotificationsByRecipientID("11");
+		for (DBNotification n : notifications){
+			System.out.println(n);
+		}
 	
 	}
 	

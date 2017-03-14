@@ -2,11 +2,13 @@
 
 package edu.depaul.secmail.models;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import edu.depaul.secmail.DBCon;
 import edu.depaul.secmail.Notification;
@@ -21,6 +23,16 @@ public class DBNotification {
 	private String subject;
 	private int emailID;
 	private Date sendDate;
+
+	// Constructor to match the db
+	public DBNotification(int notificationID,User sender, User recipient, String subject, int emailID, Date sendDate) {
+		this.notificationID = notificationID;
+		this.sender = sender;
+		this.recipient = recipient;
+		this.subject = subject;
+		this.emailID = emailID;
+		this.sendDate = sendDate;
+	}
 	
 	public DBNotification(User sender, User recipient, String subject, int emailID, Date sendDate) {
 		this.sender = sender;
@@ -61,53 +73,208 @@ public class DBNotification {
 	}
 	
 	public void dbWrite() {
-		/// Only write to the database if the notification isn't already stored in it 
-		if (notificationID == 0){
+
+		String sql = "INSERT INTO notification VALUES (0,  \"" + sender.getID() + "\", \"" + recipient.getID() + "\", \"" + emailID + "\" , \"" + new java.sql.Date(sendDate.getTime()) + "\")";
+		System.out.println(sql);
+		java.sql.Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try{
+			// Open a Connection
+			System.out.println("Connecting to database...");
+			conn = DBCon.getRemoteConnection();
 			
-			String sql = "INSERT INTO notification VALUES (0,  \"" + sender.getID() + "\", \"" + recipient.getID() + "\", \"" + emailID + "\" , \"" + new java.sql.Date(sendDate.getTime()) + "\")";
-			System.out.println(sql);
-			java.sql.Connection conn = null;
-			PreparedStatement stmt = null;
+			// Execute query 
+			System.out.println("Creating statement...");
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			stmt.executeUpdate();
+			ResultSet rs = stmt.getGeneratedKeys();
 			
+			// set tagID from newly inserted row
+			if (rs.next()){
+				System.out.println("Insert Notification Success");
+				notificationID = rs.getInt(1);
+			}
+			
+			// Clean up connection
+			stmt.close();
+			conn.close();
+		} catch (SQLException se){
+			// handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e){
+			// handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// close resources
 			try{
-				// Open a Connection
-				System.out.println("Connecting to database...");
-				conn = DBCon.getRemoteConnection();
-				
-				// Execute query 
-				System.out.println("Creating statement...");
-				stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				stmt.executeUpdate();
-				ResultSet rs = stmt.getGeneratedKeys();
-				
-				// set tagID from newly inserted row
-				if (rs.next()){
-					System.out.println("Insert Notification Success");
-					notificationID = rs.getInt(1);
-				}
-				
-				// Clean up connection
-				stmt.close();
-				conn.close();
+				if (stmt != null) stmt.close();
+			} catch (SQLException se2){}
+			try {
+				if (conn != null) conn.close();
 			} catch (SQLException se){
-				// handle errors for JDBC
 				se.printStackTrace();
-			} catch (Exception e){
-				// handle errors for Class.forName
-				e.printStackTrace();
-			} finally {
-				// close resources
+			}
+		}
+	
+	}
+	
+	//Returns a DBNotification object based on its id in the database
+	public static DBNotification getDBNotificationByID(int dbNotificationID){
+		String sql = "SELECT * FROM notification where notification_id = \"" + dbNotificationID + "\"";
+		return getNotificationFromSQLStatement(sql);
+	}
+	
+	//Returns an array of DBNotification objects based on a recipient User object
+	public static ArrayList<DBNotification> getDBNotificationsByRecipient(User recipient){
+		String sql = "SELECT * FROM notification where recipient_id = \"" + recipient.getID() + "\"";
+		return getNotificationArrayListFromSQLStatement(sql);
+	}
+	
+	//Returns an array of DBNotification objects based on a recipient id
+	public static ArrayList<DBNotification> getDBNotificationsByRecipientID(String recipientID){
+		String sql = "SELECT * FROM notification where recipient_id = \"" + recipientID + "\"";
+		return getNotificationArrayListFromSQLStatement(sql);
+	}
+	
+	//Returns an array of DBNotification objects based on a recipient address
+	public static ArrayList<DBNotification> getDBNotificationsByRecipientAddress(String recipientAddress){
+		String sql = "SELECT * FROM notification where recipient_id = \"" + User.getUserFromAddress(recipientAddress).getID() + "\"";
+		return getNotificationArrayListFromSQLStatement(sql);
+	}
+	
+	//Returns an array of DBNotification objects based on a sender User object
+	public static ArrayList<DBNotification> getDBNotificationsBySender(User sender){
+		String sql = "SELECT * FROM notification where sender_id = \"" + sender.getID() + "\"";
+		return getNotificationArrayListFromSQLStatement(sql);
+	}
+	
+	//Returns an array of DBNotification objects based on a sender id
+	public static ArrayList<DBNotification> getDBNotificationsBySenderID(String senderID){
+		String sql = "SELECT * FROM notification where sender_id = \"" + senderID + "\"";
+		return getNotificationArrayListFromSQLStatement(sql);
+	}
+	
+	//Returns an array of DBNotification objects based on a sender address
+	public static ArrayList<DBNotification> getDBNotificationsBySenderAddress(String senderAddress){
+		String sql = "SELECT * FROM notification where sender_id = \"" + User.getUserFromAddress(senderAddress).getID() + "\"";
+		return getNotificationArrayListFromSQLStatement(sql);
+	}
+	
+	// Returns a DBNotification object based on a valid sql query 
+	public static DBNotification getNotificationFromSQLStatement(String sql){
+		Connection conn = null;
+		Statement stmt = null;
+		DBNotification notification = null;
+		
+		try{
+			// Register JDBC Driver
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			// Open a connection
+			System.out.println("Connecting to database.....");
+			conn = DBCon.getRemoteConnection();
+			
+			// EXECUTE A QUERY 
+			System.out.println("Creating a statement");
+			stmt = conn.createStatement();
+	
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			// Extract data from result set
+			while (rs.next()){
+				int id = rs.getInt("notification_id");
+				User sender= User.getUserFromID(rs.getInt("sender_id"));
+				User recipient= User.getUserFromID(rs.getInt("recipient_id"));
+				Message message = Message.getMessageByID(rs.getInt("message_id"));
+				Date messageDate = rs.getDate("message_date");
+		
+				notification = new DBNotification(id, sender, recipient, message.getSubject(), message.getID(), messageDate);
+			}
+			
+			// clean up connection
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch(SQLException se){
+			// handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e){
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try{
+				if (stmt != null)
+					stmt.close();
+				} catch(SQLException se2){
+				}
 				try{
-					if (stmt != null) stmt.close();
-				} catch (SQLException se2){}
-				try {
 					if (conn != null) conn.close();
 				} catch (SQLException se){
 					se.printStackTrace();
 				}
-			}
 		}
+		return notification;
+	}
+	
+	// Returns a DBNotification arraylist based on a valid sql query 
+	public static ArrayList<DBNotification> getNotificationArrayListFromSQLStatement(String sql){
+		Connection conn = null;
+		Statement stmt = null;
+		DBNotification notification = null;
+		ArrayList<DBNotification> dbNotificationArrayList = new ArrayList<DBNotification>();
 		
+		try{
+			// Register JDBC Driver
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			// Open a connection
+			System.out.println("Connecting to database.....");
+			conn = DBCon.getRemoteConnection();
+			
+			// EXECUTE A QUERY 
+			System.out.println("Creating a statement");
+			stmt = conn.createStatement();
+	
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			// Extract data from result set
+			while (rs.next()){
+				int id = rs.getInt("notification_id");
+				User sender= User.getUserFromID(rs.getInt("sender_id"));
+				User recipient= User.getUserFromID(rs.getInt("recipient_id"));
+				Message message = Message.getMessageByID(rs.getInt("message_id"));
+				Date messageDate = rs.getDate("message_date");
+		
+				notification = new DBNotification(id, recipient, recipient, message.getSubject(), message.getID(), messageDate);
+				dbNotificationArrayList.add(notification);
+			}
+			
+			// clean up connection
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch(SQLException se){
+			// handle errors for JDBC
+			se.printStackTrace();
+		} catch (Exception e){
+			// Handle errors for Class.forName
+			e.printStackTrace();
+		} finally {
+			// finally block used to close resources
+			try{
+				if (stmt != null)
+					stmt.close();
+				} catch(SQLException se2){
+				}
+				try{
+					if (conn != null) conn.close();
+				} catch (SQLException se){
+					se.printStackTrace();
+				}
+		}
+		return dbNotificationArrayList;
 	}
 	
 	

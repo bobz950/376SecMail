@@ -171,6 +171,60 @@ public class Message implements DBModel {
 		}
 	}
 	
+	// FOR TESTING PURPOSES ONLY!!!!!!!!!!! Or not..... ;)
+	public static void destroyAllMessages(){
+			// the last parameter is an attachment BLOB field in the database
+			String messageSqlQuery = "TRUNCATE TABLE message";
+			System.out.println(messageSqlQuery);
+			
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			
+			try{
+				// Register JDBC Driver
+				Class.forName("com.mysql.jdbc.Driver");
+				
+				// Open a connection
+				System.out.println("Connecting to database.....");
+				conn = DBCon.getRemoteConnection();
+				
+				// EXECUTE A QUERY 
+				System.out.println("Creating a statement");
+				stmt = conn.prepareStatement(messageSqlQuery, Statement.RETURN_GENERATED_KEYS);
+				stmt.executeUpdate();
+				ResultSet rs = stmt.getGeneratedKeys();
+				
+				// Extract data from result set
+				if (rs.next()){
+					System.out.println("Delete messages success");
+				} else {
+					System.out.println("Delete messages fail");
+				}
+				
+				// clean up connection
+				stmt.close();
+				conn.close();
+			} catch(SQLException se){
+				// handle errors for JDBC
+				se.printStackTrace();
+			} catch (Exception e){
+				// Handle errors for Class.forName
+				e.printStackTrace();
+			} finally {
+				// finally block used to close resources
+				try{
+					if (stmt != null)
+						stmt.close();
+					} catch(SQLException se2){
+					}
+					try{
+						if (conn != null) conn.close();
+					} catch (SQLException se){
+						se.printStackTrace();
+					}
+			}
+	}
+	
 	// returns message object by its id in the database
 	public static Message getMessageByID(int messageID){
 		String sql = "SELECT * FROM message where message_id = " + messageID;
