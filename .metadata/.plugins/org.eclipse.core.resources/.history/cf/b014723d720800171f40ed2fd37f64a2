@@ -119,16 +119,6 @@ public class DBNotification {
 	
 	}
 	
-	// returns a message based on the current notification object
-	public Message getMessageByDBNotification(){
-		return Message.getMessageByID(emailID);
-	}
-	
-	// Static method to return a message object from a dbnotification object 
-	public static Message getMessageByDBNotification(DBNotification notification){
-		return Message.getMessageByID(notification.getEmailID());
-	}
-	
 	//Returns a DBNotification object based on its id in the database
 	public static DBNotification getDBNotificationByID(int dbNotificationID){
 		String sql = "SELECT * FROM notification where notification_id = \"" + dbNotificationID + "\"";

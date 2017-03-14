@@ -124,7 +124,6 @@ public class DBNotification {
 		return Message.getMessageByID(emailID);
 	}
 	
-	// Static method to return a message object from a dbnotification object 
 	public static Message getMessageByDBNotification(DBNotification notification){
 		return Message.getMessageByID(notification.getEmailID());
 	}

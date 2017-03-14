@@ -84,10 +84,7 @@ public class DBCon {
 		//System.out.println(Message.getMessageByID(7));
 		ArrayList<DBNotification> notifications = DBNotification.getDBNotificationsByRecipientID("11");
 		for (DBNotification n : notifications){
-			System.out.println("Notification: ");
-			System.out.println(n + "\n");
-			System.out.println("Messsage: ");
-			System.out.println(n.getMessageByDBNotification() + "\n");
+			System.out.println(n);
 		}
 	
 	}

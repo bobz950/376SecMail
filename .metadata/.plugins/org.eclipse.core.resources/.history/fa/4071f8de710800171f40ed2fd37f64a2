@@ -225,11 +225,6 @@ public class Message implements DBModel {
 			}
 	}
 	
-	// returns a message object by its DBNotification
-	public static Message getMessageByNotification(DBNotification notification){
-		return getMessageByID(notification.getEmailID());
-	}
-	
 	// returns message object by its id in the database
 	public static Message getMessageByID(int messageID){
 		String sql = "SELECT * FROM message where message_id = " + messageID;
