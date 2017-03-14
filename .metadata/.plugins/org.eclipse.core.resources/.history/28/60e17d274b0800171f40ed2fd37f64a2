@@ -131,7 +131,7 @@ public class Message implements DBModel {
 				
 				// Write into message_recipient table for each message recipient
 				for (User recipient : recipients){
-					String messageRecipientSqlQuery = "INSERT INTO notification VALUES ("+ sender.getID() + ", " + recipient.getID() + ", " + rs.getInt(1) + ", null)";
+					String messageRecipientSqlQuery = "INSERT INTO notification VALUES ("+ sender.getID() + ", " + recipient.getID() + ", " + rs.getInt(1) + ", \"null\")";
 					stmt = conn.prepareStatement(messageRecipientSqlQuery);
 					int rsMR= stmt.executeUpdate();
 					if (rsMR != 0){

@@ -103,7 +103,7 @@ public class Message implements DBModel {
 	@Override
 	public void dbWrite() {
 		// the last parameter is an attachment BLOB field in the database
-		String messageSqlQuery = "INSERT INTO message VALUES (0, \"" + subject + "\", + \""+content + "\", null)";
+		String messageSqlQuery = "INSERT INTO message VALUES (0, \"" + subject + "\", + \""+content + ", 0)";
 		System.out.println(messageSqlQuery);
 		
 		Connection conn = null;
@@ -131,7 +131,7 @@ public class Message implements DBModel {
 				
 				// Write into message_recipient table for each message recipient
 				for (User recipient : recipients){
-					String messageRecipientSqlQuery = "INSERT INTO notification VALUES ("+ sender.getID() + ", " + recipient.getID() + ", " + rs.getInt(1) + ", null)";
+					String messageRecipientSqlQuery = "INSERT INTO notification VALUES ("+ sender.getID() + ", " + recipient.getID() + ", " + rs.getInt(1) + ", \"null\")";
 					stmt = conn.prepareStatement(messageRecipientSqlQuery);
 					int rsMR= stmt.executeUpdate();
 					if (rsMR != 0){
