@@ -1,3 +1,5 @@
+// Will Pankiewicz
+// This isn't really needed...
 package edu.depaul.secmail.models;
 
 public interface DBModel {

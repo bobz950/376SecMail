@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import edu.depaul.secmail.DBCon;
 import edu.depaul.secmail.EmailStruct;
+import edu.depaul.secmail.SecMailServer;
 
 public class Message implements DBModel {
 
@@ -165,7 +166,7 @@ public class Message implements DBModel {
 	
 	
 	public EmailStruct toEmailStruct(){
-		EmailStruct emailStruct = new EmailStruct();
+		EmailStruct emailStruct = SecMailServer.makeEmail();
 		for (User recipient : recipients){
 			emailStruct.addRecipient(recipient.getUserAddress());
 		}

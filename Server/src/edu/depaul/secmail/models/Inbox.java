@@ -1,3 +1,4 @@
+// Will Pankiewicz
 package edu.depaul.secmail.models;
 
 import java.util.ArrayList;

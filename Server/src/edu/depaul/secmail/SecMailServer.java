@@ -8,6 +8,7 @@
 package edu.depaul.secmail;
 
 import java.net.*;
+import java.util.Date;
 import java.util.LinkedList;
 
 import java.io.EOFException;
@@ -168,6 +169,22 @@ public class SecMailServer {
 				System.exit(10);
 			}
 		}
+	}	
+	
+	//WP
+	public static UserStruct makeUser(String s){
+		return new UserStruct(s);
+	}
+	
+	//WP
+	public static Notification makeNotification(UserStruct toUser, UserStruct fromUser, NotificationType type, String id, String subject, Date date)
+	{
+		return new Notification(toUser, fromUser, type, id, subject, date);
+	}
+	
+	//WP
+	public static EmailStruct makeEmail(){
+		return new EmailStruct();
 	}
 
 }

@@ -1,3 +1,5 @@
+// Will Pankewicz
+
 package edu.depaul.secmail.models;
 
 import java.sql.PreparedStatement;

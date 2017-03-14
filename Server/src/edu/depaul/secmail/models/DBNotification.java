@@ -1,3 +1,5 @@
+// WILL PANKIEWICZ
+
 package edu.depaul.secmail.models;
 
 import java.sql.Date;
@@ -9,6 +11,7 @@ import java.sql.Statement;
 import edu.depaul.secmail.DBCon;
 import edu.depaul.secmail.Notification;
 import edu.depaul.secmail.NotificationType;
+import edu.depaul.secmail.SecMailServer;
 
 public class DBNotification {
 	
@@ -54,7 +57,7 @@ public class DBNotification {
 	}
 	
 	public Notification toNotificatonStruct(){
-		return new Notification(recipient.toUserStruct(), sender.toUserStruct(), NotificationType.NEW_EMAIL, Integer.toString(emailID), subject, sendDate);
+		return SecMailServer.makeNotification(recipient.toUserStruct(), sender.toUserStruct(), NotificationType.NEW_EMAIL, Integer.toString(emailID), subject, sendDate);
 	}
 	
 	public void dbWrite() {

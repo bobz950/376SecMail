@@ -1,3 +1,5 @@
+// Will Pankiewicz
+
 package edu.depaul.secmail.models;
 
 import java.security.MessageDigest;
@@ -146,9 +148,9 @@ public class User implements DBModel {
 		}
 	}
 
-	
+
 	// returns a userStruct object
 	public UserStruct toUserStruct(){
-		return new UserStruct(userAddress + "@" + SecMailServer.getGlobalConfig().getDomain());
+		return SecMailServer.makeUser(userAddress + "@" + SecMailServer.getGlobalConfig().getDomain());
 	}
 }
