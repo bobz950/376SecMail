@@ -15,18 +15,20 @@ import edu.depaul.secmail.SecMailServer;
 
 public class Message implements DBModel {
 
-	private int messageID;
+	private String messageID;
 	private User sender;
 	private ArrayList<User> recipients = new ArrayList<User>();
 	private String subject;
 	private String content;
+	private byte[] encryptedBytes =  null;
+	private boolean encrypted = false;
 	// Message Attachment
 	private Date messageDate;
 	private ArrayList<Tag> tags;
 	private boolean hasRead;
 	
 	
-	public Message(int messageID, User sender, User recipient, String subject, String content, Date messageDate){
+	public Message(String messageID, User sender, User recipient, String subject, String content, Date messageDate){
 		this.messageID = messageID;
 		this.sender = sender;
 		recipients.add(recipient);
@@ -46,7 +48,7 @@ public class Message implements DBModel {
 	}
 	
 	// Constructor that matches DB, minus the attachment
-	public Message(int messageID, String message_subject, String message_content){
+	public Message(String messageID, String message_subject, String message_content){
 		this.messageID = messageID;
 		this.subject = message_subject;
 		this.content = message_content;
@@ -93,7 +95,7 @@ public class Message implements DBModel {
 
 	@Override
 	public int getID() {
-		return messageID;
+		return Integer.parseInt(messageID);
 	}
 
 	@Override
@@ -111,8 +113,9 @@ public class Message implements DBModel {
 	@Override
 	public void dbWrite() {
 		// the last parameter is an attachment BLOB field in the database
-		String messageSqlQuery = "INSERT INTO message VALUES (0, \"" + subject + "\", + \""+content + "\", null)";
-		System.out.println(messageSqlQuery);
+		//String messageSqlQuery = "INSERT INTO message VALUES (0, \"" + subject + "\", + \""+content + "\", null)";
+		String messageSqlQuery = "INSERT INTO message (message_id, message_subject, message_content) VALUES (?, ?, ?)";
+		//System.out.println(messageSqlQuery);
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -128,6 +131,9 @@ public class Message implements DBModel {
 			// EXECUTE A QUERY 
 			System.out.println("Creating a statement");
 			stmt = conn.prepareStatement(messageSqlQuery, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, messageID);
+			stmt.setString(2, subject);
+			stmt.setString(3, content);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			
@@ -135,11 +141,11 @@ public class Message implements DBModel {
 			if (rs.next()){
 				System.out.println("Insert message success");
 				
-				messageID = rs.getInt(1);
+				messageID = rs.getString(1);
 				
 				// Write into notifications table for each message recipient
 				for (User recipient : recipients){
-					DBNotification n = new DBNotification(sender, recipient, subject, rs.getInt(1), messageDate);
+					DBNotification n = new DBNotification(sender, recipient, subject, rs.getString(1), messageDate);
 					n.dbWrite();
 				}
 				
@@ -227,12 +233,12 @@ public class Message implements DBModel {
 	
 	// returns a message object by its DBNotification
 	public static Message getMessageByNotification(DBNotification notification){
-		return getMessageByID(notification.getEmailID());
+		return getMessageByID(new Integer(notification.getEmailID()).toString());
 	}
 	
 	// returns message object by its id in the database
-	public static Message getMessageByID(int messageID){
-		String sql = "SELECT * FROM message where message_id = " + messageID;
+	public static Message getMessageByID(String messageID){
+		String sql = "SELECT * FROM message where message_id = '" + messageID + "';";
 		return getMessageFromSQLStatement(sql);
 	}
 	
@@ -264,7 +270,7 @@ public class Message implements DBModel {
 			
 			// Extract data from result set
 			while (rs.next()){
-				int id = rs.getInt("message_id");
+				String id = rs.getString("message_id");
 				String messageSubject = rs.getString("message_subject");
 				String messageContent = rs.getString("message_content");
 				

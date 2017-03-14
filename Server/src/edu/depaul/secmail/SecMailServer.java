@@ -8,8 +8,13 @@
 package edu.depaul.secmail;
 
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+
+import edu.depaul.secmail.models.DBNotification;
+import edu.depaul.secmail.models.Message;
+import edu.depaul.secmail.models.User;
 
 import java.io.EOFException;
 import java.io.File;
@@ -63,62 +68,27 @@ public class SecMailServer {
 	}
 	
 	
-	//Jacob Burkamper
+	//Robert Alianello
 	private static void loadNotifications()
 	{
 		notifications = new LinkedList<Notification>(); // instantiate empty list
-		File notificationFile = new File("Notifications.bin"); // TODO: make this path part of Config
-		if (notificationFile.exists()) // check for the notifications file
-		{
-			try {
-				ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(notificationFile));
-				Notification n = null;
-				try {
-					//load any notifications in the file into the list
-					while ((n = (Notification)inStream.readObject()) != null)
-						notifications.add(n);
-				} catch (ClassNotFoundException e) {
-					//errors in case notifications don't load.
-					Log.Error("ClassNotFound Exception while reading notifications file");
-					Log.Error("Were the notifications saved by a different version of the server?");
-					Log.Error("Error was: " + e.toString());
-				}
-			}  catch (EOFException e) {
-				 Log.Debug("Finished reading notification file");
-			 }catch (IOException e) {
-				//generic IO errors.
-				Log.Error("IO Error while reading notifications file");
-				Log.Error(e.toString());
-			}
-			
-		}
-		//regardless of whether the file exists or not, open a writer.
-		//this will be used to save notifications later.
-		try {
-			notificationWriter = new ObjectOutputStream(new FileOutputStream(notificationFile));
-			//write the notifications back to the file
-			//TODO: Make this unnecessary somehow
-			for(Notification n: notifications)
-				saveNotification(n);
-		} catch (IOException e) {
-			Log.Error("IO Exception while trying to create notificationWriter");
-			Log.Error(e.toString());
-		}
 		
+		ArrayList<DBNotification> dbNots = DBNotification.getNotificationArrayListFromSQLStatement("SELECT * FROM notification;");
+		
+		for (DBNotification n : dbNots) {
+			Notification notification = n.toNotificatonStruct();
+			notifications.add(notification);
+		}
+	
 	}
 	
 	//save the notifications list to a file
 	//Jacob Burkamper
 	private static void saveNotification(Notification n) 
 	{
-		try {
-			Log.Debug("Saving Notification for user: "+n.getTo().compile()+"from:"+ n.getFrom()+" id: "+n.getID());
-			notificationWriter.writeObject(n);
-		} catch (IOException e) {
-			Log.Error("IOException while trying to write to notification file");
-			Log.Error(e.toString());
-			Log.Error("Notification might not be saved for user: "+n.getTo().compile() +" id: "+n.getID());
-		}
+		
+		DBNotification notification = new DBNotification(new User(n.getFrom().getUser()), new User(n.getTo().getUser()), n.getSubject(), n.getID(), new java.sql.Date(n.getDate().getTime()));
+		notification.dbWrite();
 	}
 	
 	//Jacob Burkamper

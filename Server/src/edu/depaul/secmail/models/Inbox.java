@@ -17,28 +17,28 @@ public class Inbox {
 	
 	
 	public void addMessage(Message message){
-		inbox.add(message);
+		//inbox.add(message);
 	}
 	
-	public Message getMessage(int index){
+	public Notification getMessage(int index){
 		return inbox.get(index);
 	}
 	
 	public boolean hasMessageWithID(int messageID){
-		for (Message message : inbox){
-			if (message.getID() == messageID){
-				return true;
-			}
-		}
+		//for (Message message : inbox){
+		//	if (message.getID() == messageID){
+		//		return true;
+		//	}
+		//}
 		return false;
 	}
 	
 	public Message findMessageByID(int messageID){
 		if (hasMessageWithID(messageID)){
-			for (Message message : inbox){
-				if (message.getID() == messageID){
-					return message;
-				}
+			for (Notification message : inbox){
+				//if (message.getID() == messageID){
+				//	return message;
+				//}
 			}
 		} else {
 			throw new IllegalArgumentException();
@@ -48,11 +48,11 @@ public class Inbox {
 	
 	public ArrayList<Message> getMessagesWithTag(Tag tag){
 		ArrayList<Message> taggedMessages = new ArrayList<Message>();
-		for (Message message: inbox){
-			if (message.getTags().contains(tag)){
-				taggedMessages.add(message);
-			}
-		}
+		//for (Message message: inbox){
+		//	if (message.getTags().contains(tag)){
+		//		taggedMessages.add(message);
+		//	}
+		//}
 		return taggedMessages;
 	}
 

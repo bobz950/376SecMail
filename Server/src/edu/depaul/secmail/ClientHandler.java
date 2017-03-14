@@ -9,6 +9,10 @@ package edu.depaul.secmail;
 
 import java.util.LinkedList;
 import java.util.concurrent.*;
+
+import edu.depaul.secmail.models.Message;
+import edu.depaul.secmail.models.User;
+
 import java.net.Socket;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -135,10 +139,9 @@ public class ClientHandler implements Runnable{
 			String username = (String)io.readObject();
 			String password = (String)io.readObject();
 			
-                       	Auth authenticate = new Auth();
                        	
 			//authenticate
-			if (authenticate.login(username,password)) //DJ & Juan
+			if (User.authenticate(username,password)) 
 			{
 				io.writeObject(new PacketHeader(Command.LOGIN_SUCCESS));
 				user = new UserStruct(username, SecMailServer.getGlobalConfig().getDomain(), SecMailServer.getGlobalConfig().getPort());
@@ -268,21 +271,15 @@ public class ClientHandler implements Runnable{
 		return clientSocket.getInetAddress() + ":" + clientSocket.getPort();
 	}
 	
-	//Jacob Kanka
-	//writes email as a text file. Directory root can be configured by the user. Files are stored in separate folders for each user.
+	//Robert Alianello
 	private void storeEmail(EmailStruct email) throws IOException
 	{
-		String root = SecMailServer.getGlobalConfig().getMailRoot();
-		String directoryName = this.user.getUser();
-		String filename = email.getID();
-	
-		File directory = new File(String.valueOf(root)+String.valueOf(directoryName));
-		if (! directory.exists()){
-			directory.mkdir();
-		}
-		File writeTo = new File(directory + "/" + filename);
-		email.writeToFile(writeTo);
-		Log.Debug("Wrote new email file: "+writeTo.getAbsolutePath());
+		Message dbEmail = new Message(email.getID(), email.getSubject(), email.getBody());
+		LinkedList<UserStruct> recipients = email.getToList();
+		//add all recipients
+		for (UserStruct usr : recipients) dbEmail.addRecipient(new User(usr.getUser()));
+		dbEmail.dbWrite();
+
 		return;
 	}
 	
@@ -300,47 +297,31 @@ public class ClientHandler implements Runnable{
 		}
 	}
 	 
-	// Josh Clark
+	// Robert Alianello
 	private void retrieveEmail(String id, UserStruct fromUser)
 	{
-		// Check if user is null
-		if(user == null){	
-			return;
-		}
-		
-		// Find the file and write it back to the stream
+		if(user == null) return;
 		else{
 			
-			// Get email directory
-			String root = SecMailServer.getGlobalConfig().getMailRoot();
-			String directoryName = fromUser.getUser();
-			
-			// Get the file
-			File file = new File(String.valueOf(root)+String.valueOf(directoryName)+ "/" + id);
-			System.out.println(file.getAbsolutePath());
-			
-			// Write the email to the stream
+			//get the message from db
+			Message msg = Message.getMessageByID(id);
 			try {
-				if(file.exists()){
+				if (msg != null) {
 					PacketHeader sendEmail = new PacketHeader(Command.RECEIVE_EMAIL);
-					EmailStruct email = new EmailStruct(file);
+					EmailStruct email = msg.toEmailStruct();
 					Notification confirmation = new Notification(fromUser, user, NotificationType.EMAIL_RECEIVED, email);
 					SecMailServer.addNotificationToList(confirmation);
 					io.writeObject(sendEmail);
 					io.flush();
 					io.writeObject(email);
-					Log.Debug("Email written to stream");
 				}
-			else{
-				PacketHeader noEmail = new PacketHeader(Command.NO_EMAIL);
-				io.writeObject(noEmail);
-				}	
-			} catch (IOException e) {
-				Log.Error("IOException thrown while writing email to client");
-				e.printStackTrace();
-			}		
+				else {
+					PacketHeader noEmail = new PacketHeader(Command.NO_EMAIL);
+					io.writeObject(noEmail);
+				}
+			}
+			catch (IOException e) {}			
 		}
-		
 	}
 	
 	// Josh Clark

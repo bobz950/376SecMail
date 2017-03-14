@@ -247,8 +247,8 @@ public class EmailStruct implements Serializable{
 	}
 	
 	// WP: Sets id to the id from the database
-	public void setID(int messageID){
-		this.id = Integer.toString(messageID);
+	public void setID(String messageID){
+		this.id = messageID;
 	}
 	
 	//return the entire list of recipients

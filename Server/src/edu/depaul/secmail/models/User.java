@@ -2,6 +2,7 @@
 
 package edu.depaul.secmail.models;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -40,6 +41,12 @@ public class User implements DBModel {
 			e.printStackTrace();
 		}
 		hashPassword();
+	}
+	
+	public User(String user) {
+		this.userAddress = user;
+		this.userPassword = null;
+		this.userSalt = null;
 	}
 
 	public String getUserAddress() {
@@ -205,7 +212,7 @@ public class User implements DBModel {
 		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
 		byte[] salt = new byte[16];
 		sr.nextBytes(salt);
-		userSalt = salt.toString();
+		userSalt = new BigInteger(salt).toString();
 	}
 	
 	// hashes the current password
@@ -213,7 +220,7 @@ public class User implements DBModel {
 		String generatedPassword = null;
 		try{
 			MessageDigest md =MessageDigest.getInstance("MD5");
-			md.update(userSalt.getBytes());
+			md.update(new BigInteger(userSalt).toByteArray());
 			byte[] passwordBytes = md.digest(userPassword.getBytes());
 			StringBuilder sb = new StringBuilder();
 			for (int i =0; i < passwordBytes.length; i++){
@@ -242,10 +249,50 @@ public class User implements DBModel {
 		}
 		return generatedPassword;
 	}
+	
+	private static byte[] getStoredSalt(String username) {
+		String query = "SELECT user_salt FROM user WHERE user_address=?;";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = DBCon.getRemoteConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, username);
+			
+			ResultSet r = stmt.executeQuery();
+			String bytestring = "";
+			if (r.next()) bytestring = r.getString("user_salt");
+			else return null;
+			byte[] salt = new BigInteger(bytestring).toByteArray();
+			return salt;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+	
+	public static boolean authenticate(String username, String password) {
+		byte[] salt = getStoredSalt(username);
+		if (salt == null) {
+			System.out.println("Couldnt get salt");
+			return false;
+		}
+		User u = getUserFromAddress(username);
+		String attemptedPass = hashPassword(password, salt);
+		if (attemptedPass.equals(u.userPassword)) return true;
+		else {
+			System.out.println("Failed login attempt");
+			return false;
+		}
+	}
 
 
 	// returns a userStruct object
 	public UserStruct toUserStruct(){
 		return SecMailServer.makeUser(userAddress + "@" + SecMailServer.getGlobalConfig().getDomain());
 	}
+	
+//	public static void main(String[] args) {
+//		User u = new User("test2","test");
+//		u.dbWrite();
+//	}
 }

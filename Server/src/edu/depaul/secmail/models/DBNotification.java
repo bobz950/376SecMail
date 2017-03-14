@@ -17,15 +17,15 @@ import edu.depaul.secmail.SecMailServer;
 
 public class DBNotification {
 	
-	private int notificationID;
+	private String notificationID;
 	private User sender;
 	private User recipient;
 	private String subject;
-	private int emailID;
+	private String emailID;
 	private Date sendDate;
 
 	// Constructor to match the db
-	public DBNotification(int notificationID,User sender, User recipient, String subject, int emailID, Date sendDate) {
+	public DBNotification(String notificationID,User sender, User recipient, String subject, String emailID, Date sendDate) {
 		this.notificationID = notificationID;
 		this.sender = sender;
 		this.recipient = recipient;
@@ -34,7 +34,7 @@ public class DBNotification {
 		this.sendDate = sendDate;
 	}
 	
-	public DBNotification(User sender, User recipient, String subject, int emailID, Date sendDate) {
+	public DBNotification(User sender, User recipient, String subject, String emailID, Date sendDate) {
 		this.sender = sender;
 		this.recipient = recipient;
 		this.subject = subject;
@@ -54,7 +54,7 @@ public class DBNotification {
 		return subject;
 	}
 
-	public int getEmailID() {
+	public String getEmailID() {
 		return emailID;
 	}
 
@@ -69,7 +69,7 @@ public class DBNotification {
 	}
 	
 	public Notification toNotificatonStruct(){
-		return SecMailServer.makeNotification(recipient.toUserStruct(), sender.toUserStruct(), NotificationType.NEW_EMAIL, Integer.toString(emailID), subject, sendDate);
+		return SecMailServer.makeNotification(recipient.toUserStruct(), sender.toUserStruct(), NotificationType.NEW_EMAIL, emailID, subject, sendDate);
 	}
 	
 	public void dbWrite() {
@@ -93,7 +93,7 @@ public class DBNotification {
 			// set tagID from newly inserted row
 			if (rs.next()){
 				System.out.println("Insert Notification Success");
-				notificationID = rs.getInt(1);
+				notificationID = rs.getString(1);
 			}
 			
 			// Clean up connection
@@ -130,7 +130,7 @@ public class DBNotification {
 	}
 	
 	//Returns a DBNotification object based on its id in the database
-	public static DBNotification getDBNotificationByID(int dbNotificationID){
+	public static DBNotification getDBNotificationByID(String dbNotificationID){
 		String sql = "SELECT * FROM notification where notification_id = \"" + dbNotificationID + "\"";
 		return getNotificationFromSQLStatement(sql);
 	}
@@ -193,13 +193,13 @@ public class DBNotification {
 			
 			// Extract data from result set
 			while (rs.next()){
-				int id = rs.getInt("notification_id");
+				String id = rs.getString("notification_id");
 				User sender= User.getUserFromID(rs.getInt("sender_id"));
 				User recipient= User.getUserFromID(rs.getInt("recipient_id"));
-				Message message = Message.getMessageByID(rs.getInt("message_id"));
+				Message message = Message.getMessageByID(rs.getString("message_id"));
 				Date messageDate = rs.getDate("message_date");
 		
-				notification = new DBNotification(id, sender, recipient, message.getSubject(), message.getID(), messageDate);
+				notification = new DBNotification(id, sender, recipient, message.getSubject(), new Integer(message.getID()).toString(), messageDate);
 			}
 			
 			// clean up connection
@@ -251,13 +251,13 @@ public class DBNotification {
 			
 			// Extract data from result set
 			while (rs.next()){
-				int id = rs.getInt("notification_id");
+				String id = rs.getString("notification_id");
 				User sender= User.getUserFromID(rs.getInt("sender_id"));
 				User recipient= User.getUserFromID(rs.getInt("recipient_id"));
-				Message message = Message.getMessageByID(rs.getInt("message_id"));
+				Message message = Message.getMessageByID(rs.getString("message_id"));
 				Date messageDate = rs.getDate("message_date");
 		
-				notification = new DBNotification(id, recipient, recipient, message.getSubject(), message.getID(), messageDate);
+				notification = new DBNotification(id, recipient, recipient, message.getSubject(), new Integer(message.getID()).toString(), messageDate);
 				dbNotificationArrayList.add(notification);
 			}
 			
