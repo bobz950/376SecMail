@@ -1,0 +1,53 @@
+package edu.depaul.secmail.models;
+
+import java.sql.Date;
+
+public class Notification {
+	
+	private User sender;
+	private User recipient;
+	private String subject;
+	private String emailID;
+	private Date sendDate;
+	
+	public Notification(User sender, User recipient, String subject, String emailID, Date sendDate) {
+		this.sender = sender;
+		this.recipient = recipient;
+		this.subject = subject;
+		this.emailID = emailID;
+		this.sendDate = sendDate;
+	}
+
+	public User getSender() {
+		return sender;
+	}
+
+	public User getRecipient() {
+		return recipient;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public String getEmailID() {
+		return emailID;
+	}
+
+	public Date getSendDate() {
+		return sendDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Notification [sender=" + sender + ", recipient=" + recipient + ", subject=" + subject + ", emailID="
+				+ emailID + ", sendDate=" + sendDate + "]";
+	}
+	
+	public DBNotification toNotificatonStruct(){
+		
+	}
+	
+	
+
+}
