@@ -20,6 +20,7 @@ public class SendEmail extends ResponseContent {
 		try {
 			BufferedReader r = new BufferedReader(new FileReader("layout/sendEmailForm.html"));
 			while ((s = r.readLine()) != null) res.append(s);
+			r.close();
 			return res.toString();
 		} 
 		catch (IOException e) {return "Error";}

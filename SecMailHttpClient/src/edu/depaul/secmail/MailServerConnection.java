@@ -63,6 +63,14 @@ public class MailServerConnection extends Thread {
 		mailCache.put(ID, e);
 	}
 	
+	public boolean isCached(String ID) {
+		return mailCache.containsKey(ID);
+	}
+	
+	public EmailStruct getFromCache(String ID) {
+		return mailCache.get(ID);
+	}
+	
 	
 	public LinkedList<Notification> getNewNotifications()
 	{		

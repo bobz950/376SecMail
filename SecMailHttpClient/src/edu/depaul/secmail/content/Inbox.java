@@ -1,5 +1,6 @@
 package edu.depaul.secmail.content;
 import java.text.DateFormat;
+import java.util.Iterator;
 import java.util.LinkedList;
 import edu.depaul.secmail.MailServerConnection;
 import edu.depaul.secmail.Main;
@@ -15,7 +16,9 @@ public class Inbox extends ResponseContent {
 		if (notifications != null) {
 			setContent("<b>Your messages: </b><br>");
 			addContent("<div class='container-fluid'><div class='row'><div class='col-md-8 col-sm-8 col-xs-12 col-md-offset-2'>");
-			for (Notification n : notifications) {
+			Iterator<Notification> it = notifications.descendingIterator();
+			while (it.hasNext()) {
+				Notification n = it.next();
 				String date = DateFormat.getDateTimeInstance().format(n.getDate());
 				if (n.getType() == NotificationType.NEW_EMAIL) {
 					addContent("<form class='form-horizontal' method='post' action='/readmail'>");

@@ -26,8 +26,10 @@ public abstract class ResponseContent implements Content {
 			BufferedReader r = new BufferedReader(new FileReader("layout/templateHeader.html"));
 			String l;
 			while((l = r.readLine()) != null) htmlHeader += l;
+			r.close();
 			r = new BufferedReader(new FileReader("layout/templateFooter.html"));
 			while((l = r.readLine()) != null) htmlFooter += l;
+			r.close();
 		} 
 		catch (IOException e) {}
 		
