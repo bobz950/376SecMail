@@ -178,7 +178,6 @@ public class Message implements DBModel {
 		emailStruct.setBody(content);
 		emailStruct.setSubject(subject);
 		emailStruct.setID(messageID);
-		return emailStruct;
 	}
 
 }

@@ -172,13 +172,7 @@ public class Message implements DBModel {
 	
 	public EmailStruct toEmailStruct(){
 		EmailStruct emailStruct = new EmailStruct();
-		for (User recipient : recipients){
-			emailStruct.addRecipient(recipient.getUserAddress());
-		}
-		emailStruct.setBody(content);
-		emailStruct.setSubject(subject);
-		emailStruct.setID(messageID);
-		return emailStruct;
+		return null;
 	}
 
 }
