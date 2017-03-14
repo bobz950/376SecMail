@@ -1,0 +1,61 @@
+// Will Pankiewicz
+package edu.depaul.secmail.models;
+
+import java.util.ArrayList;
+
+import edu.depaul.secmail.Notification;
+
+public class Inbox {
+	
+	private ArrayList<DBNotification> inbox = new ArrayList<DBNotification>();
+	private User user;
+	
+	public Inbox(){
+		
+	}
+	
+	
+	// gets a message from a notification
+	public void getMessageFromNotification(DBNotification notification){
+		String sql = "SELECT * FROM notification WHERE message_id = "+ notification.getEmailID() + " AND user_id = "+ user.getID() + ";";
+		inbox.add(DBNotification.getNotificationFromSQLStatement(sql));
+	}
+	
+	// Returns a notification by its index
+	public DBNotification getNotificationByIndex(int index){
+		return inbox.get(index);
+	}
+	
+	public boolean hasMessageWithID(String messageID){
+		for (DBNotification notification : inbox){
+			if (notification.getEmailID() == messageID){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public DBNotification findMessageByID(String messageID){
+		if (hasMessageWithID(messageID)){
+			for (DBNotification message : inbox){
+				if (message.getEmailID() == messageID){
+					return message;
+				}
+			}
+		} else {
+			throw new IllegalArgumentException();
+		}
+		return null;
+	}
+	
+	public ArrayList<Message> getMessagesWithTag(Tag tag){
+		ArrayList<Message> taggedMessages = new ArrayList<Message>();
+		//for (Message message: inbox){
+		//	if (message.getTags().contains(tag)){
+		//		taggedMessages.add(message);
+		//	}
+		//}
+		return taggedMessages;
+	}
+
+}
