@@ -35,17 +35,17 @@ public class DBCon {
 		
 		User x2 = new User("Username2", "Password");
 		//System.out.println(x.toString());
-		x2.dbWrite();
+		x.dbWrite();
 		//System.out.println(x.toString());
 		
 		User x3 = new User("Username3", "Password");
 		//System.out.println(x.toString());
-		x3.dbWrite();
+		x.dbWrite();
 		//System.out.println(x.toString());
 		
 		User x4 = new User("Username4", "Password");
 		//System.out.println(x.toString());
-		x4.dbWrite();
+		x.dbWrite();
 		//System.out.println(x.toString());
 		
 		System.out.println(User.getUserFromID(1));

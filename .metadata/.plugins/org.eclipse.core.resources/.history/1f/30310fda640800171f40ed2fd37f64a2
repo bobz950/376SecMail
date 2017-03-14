@@ -53,7 +53,7 @@ public class DBSetup {
 		Connection conn = getRemoteConnection();
 		
 		// Table Queries
-		String createUser = "CREATE TABLE user(user_id INT AUTO_INCREMENT, user_address VARCHAR(40) NOT NULL UNIQUE, user_password VARCHAR(40) NOT NULL, user_salt VARCHAR(40) , primary key(user_id));";
+		String createUser = "CREATE TABLE user(user_id INT AUTO_INCREMENT, user_address VARCHAR(40) NOT NULL , user_password VARCHAR(40) NOT NULL, user_salt VARCHAR(40) , primary key(user_id));";
 		String createMessage = "CREATE TABLE message(message_id INT AUTO_INCREMENT, message_subject VARCHAR(100),message_content VARCHAR(1000),message_attatchment BLOB, PRIMARY KEY (message_id));";
 		String createTag = "CREATE TABLE tag(tag_id INT auto_increment,tag_name VARCHAR(40),primary key ( tag_id));";
 		String createMessageTag = "CREATE TABLE message_tag(tag_id INT,message_id INT, recipient_id INT,FOREIGN KEY (tag_id) REFERENCES tag(tag_id),FOREIGN KEY (recipient_id) REFERENCES user(user_id));";

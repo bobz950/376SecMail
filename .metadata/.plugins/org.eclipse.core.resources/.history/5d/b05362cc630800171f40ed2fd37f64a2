@@ -123,20 +123,8 @@ public class User implements DBModel {
 	}
 	
 	public static User getUserFromID(int userID){
-		String sql = "SELECT * FROM user where user_id = " + userID;
-		return getUserFromSQLStatement(sql);
-	}
-	
-	// Not guarenteed to give a specified user, since userAddress isn't a primary key. 
-	public static User getUserFromAddress(String userAddress){
-		String sql = "SELECT * FROM user where user_address = \"" + userAddress + "\"";
-		return getUserFromSQLStatement(sql);
-	}
-	
-	public static User getUserFromSQLStatement(String sql){
 		Connection conn = null;
 		Statement stmt = null;
-		User user = null;
 		
 		try{
 			// Register JDBC Driver
@@ -149,7 +137,8 @@ public class User implements DBModel {
 			// EXECUTE A QUERY 
 			System.out.println("Creating a statement");
 			stmt = conn.createStatement();
-	
+			String sql;
+			sql = "SELECT * FROM user where user_id = " + userID;
 			ResultSet rs = stmt.executeQuery(sql);
 			
 			// Extract data from result set
@@ -157,7 +146,9 @@ public class User implements DBModel {
 				int id = rs.getInt("user_id");
 				String userAddress= rs.getString("user_address");
 				String userPassword = rs.getString("user_password");
-				user = new User(id, userAddress, userPassword);
+				User user = new User(id, userAddress, userPassword);
+				
+				System.out.println(user.toString());
 			}
 			
 			// clean up connection
@@ -183,7 +174,7 @@ public class User implements DBModel {
 					se.printStackTrace();
 				}
 		}
-		return user;
+		return null;
 	}
 	
 

@@ -127,7 +127,6 @@ public class User implements DBModel {
 		return getUserFromSQLStatement(sql);
 	}
 	
-	// Not guarenteed to give a specified user, since userAddress isn't a primary key. 
 	public static User getUserFromAddress(String userAddress){
 		String sql = "SELECT * FROM user where user_address = \"" + userAddress + "\"";
 		return getUserFromSQLStatement(sql);

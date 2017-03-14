@@ -3,18 +3,13 @@ package edu.depaul.secmail.models;
 
 import java.util.ArrayList;
 
-import edu.depaul.secmail.Notification;
-
 public class Inbox {
 	
-	private ArrayList<Notification> inbox = new ArrayList<Notification>();
-	private User user;
+	private ArrayList<Message> inbox = new ArrayList<Message>();
 	
 	public Inbox(){
 		
 	}
-	
-	
 	
 	public void addMessage(Message message){
 		inbox.add(message);
