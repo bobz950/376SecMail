@@ -122,27 +122,15 @@ public class User implements DBModel {
 		}
 	}
 	
-	// returns a User object from a userID
 	public static User getUserFromID(int userID){
 		String sql = "SELECT * FROM user where user_id = " + userID;
 		return getUserFromSQLStatement(sql);
 	}
 	
-	// returns a User object froma userAdress
-	// userAddress guarenteed to be unique, enforced by the db
+	// Not guarenteed to give a specified user, since userAddress isn't a primary key. 
 	public static User getUserFromAddress(String userAddress){
 		String sql = "SELECT * FROM user where user_address = \"" + userAddress + "\"";
 		return getUserFromSQLStatement(sql);
-	}
-	
-	// returns a UserStruct from a userID
-	public static UserStruct getUserStructFromID(int userID){
-		return getUserFromID(userID).toUserStruct();
-	}
-	
-	// returns a UserStruct from a userAddress
-	public static UserStruct getUserStructFromAddress(String userAddress){
-		return getUserFromAddress(userAddress).toUserStruct();
 	}
 	
 	public static User getUserFromSQLStatement(String sql){

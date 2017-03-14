@@ -171,16 +171,10 @@ public class Message implements DBModel {
 		}
 	}
 	
-	// returns message object by its id in the database
+	// returns from DB, message by its messageID
 	public static Message getMessageByID(int messageID){
 		String sql = "SELECT * FROM message where message_id = " + messageID;
 		return getMessageFromSQLStatement(sql);
-	}
-	
-	// returns email struct by its id in the database 
-	public static EmailStruct getEmailStructByID(int messageID){
-		String sql = "SELECT * FROM message where message_id = " + messageID;
-		return getMessageFromSQLStatement(sql).toEmailStruct();
 	}
 	
 	// Returns a message object based on a valid sql query 

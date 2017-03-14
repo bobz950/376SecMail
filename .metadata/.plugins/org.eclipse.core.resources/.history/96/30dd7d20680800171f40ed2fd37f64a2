@@ -44,13 +44,6 @@ public class Message implements DBModel {
 		this.content = content;
 		this.messageDate = messageDate;
 	}
-	
-	// Constructor that matches DB, minus the attachment
-	public Message(int messageID, String message_subject, String message_content){
-		this.messageID = messageID;
-		this.subject = message_subject;
-		this.content = message_content;
-	}
 
 	public User getSender() {
 		return sender;
@@ -169,73 +162,6 @@ public class Message implements DBModel {
 					se.printStackTrace();
 				}
 		}
-	}
-	
-	// returns message object by its id in the database
-	public static Message getMessageByID(int messageID){
-		String sql = "SELECT * FROM message where message_id = " + messageID;
-		return getMessageFromSQLStatement(sql);
-	}
-	
-	// returns email struct by its id in the database 
-	public static EmailStruct getEmailStructByID(int messageID){
-		String sql = "SELECT * FROM message where message_id = " + messageID;
-		return getMessageFromSQLStatement(sql).toEmailStruct();
-	}
-	
-	// Returns a message object based on a valid sql query 
-	public static Message getMessageFromSQLStatement(String sql){
-		Connection conn = null;
-		Statement stmt = null;
-		Message message = null;
-		
-		try{
-			// Register JDBC Driver
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			// Open a connection
-			System.out.println("Connecting to database.....");
-			conn = DBCon.getRemoteConnection();
-			
-			// EXECUTE A QUERY 
-			System.out.println("Creating a statement");
-			stmt = conn.createStatement();
-	
-			ResultSet rs = stmt.executeQuery(sql);
-			
-			// Extract data from result set
-			while (rs.next()){
-				int id = rs.getInt("message_id");
-				String messageSubject = rs.getString("message_subject");
-				String messageContent = rs.getString("message_content");
-				
-				message = new Message(id, messageSubject, messageContent);
-			}
-			
-			// clean up connection
-			rs.close();
-			stmt.close();
-			conn.close();
-		} catch(SQLException se){
-			// handle errors for JDBC
-			se.printStackTrace();
-		} catch (Exception e){
-			// Handle errors for Class.forName
-			e.printStackTrace();
-		} finally {
-			// finally block used to close resources
-			try{
-				if (stmt != null)
-					stmt.close();
-				} catch(SQLException se2){
-				}
-				try{
-					if (conn != null) conn.close();
-				} catch (SQLException se){
-					se.printStackTrace();
-				}
-		}
-		return message;
 	}
 	
 	
