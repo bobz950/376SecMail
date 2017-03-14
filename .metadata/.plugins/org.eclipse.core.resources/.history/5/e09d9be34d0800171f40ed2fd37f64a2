@@ -6,7 +6,6 @@ import java.security.SecureRandom;
 import java.sql.*;
 
 import edu.depaul.secmail.DBCon;
-import edu.depaul.secmail.UserStruct;
 
 public class User implements DBModel {
 
@@ -61,17 +60,17 @@ public class User implements DBModel {
 	@Override
 	public void encrypt() {
 		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void decrypt() {
 		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void dbWrite() {
-		
-		// Only write to the database if the user isn't already stored in it 
 		if (userID == 0){
 			
 			String sql = "INSERT INTO user VALUES (0,  \""+userAddress + "\", \"" + userPassword + "\", \"" + userSalt + "\")";
@@ -117,6 +116,7 @@ public class User implements DBModel {
 				}
 			}
 		}
+		
 	}
 	
 	// Generates a salt and saves it 
@@ -145,9 +145,4 @@ public class User implements DBModel {
 		}
 	}
 
-	
-	// returns a userStruct object
-	public UserStruct toUserStruct(){
-		return new UserStruct(userAddress + "@localhost");
-	}
 }

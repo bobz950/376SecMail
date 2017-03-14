@@ -17,7 +17,7 @@ public class UserStruct implements Serializable {
 	private boolean isValid = false;
 
 	//Constructor to parse the incoming string for
-	public UserStruct(String incoming)
+	UserStruct(String incoming)
 	{
 		//parse the username
 		String portString = null;
