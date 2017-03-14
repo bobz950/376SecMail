@@ -48,7 +48,7 @@ public class Notification implements Serializable{
 	}
 	
 	//Take each field directly, including Date. Most likely only really useful for testing...
-	Notification(UserStruct toUser, UserStruct fromUser, NotificationType type, String id, String subject, Date date)
+	public Notification(UserStruct toUser, UserStruct fromUser, NotificationType type, String id, String subject, Date date)
 	{
 		this.from = fromUser;
 		this.to= toUser;

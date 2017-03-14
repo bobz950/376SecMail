@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.sql.*;
 
 import edu.depaul.secmail.DBCon;
+import edu.depaul.secmail.SecMailServer;
 import edu.depaul.secmail.UserStruct;
 
 public class User implements DBModel {
@@ -148,6 +149,6 @@ public class User implements DBModel {
 	
 	// returns a userStruct object
 	public UserStruct toUserStruct(){
-		return new UserStruct(userAddress + "@localhost");
+		return new UserStruct(userAddress + "@" + SecMailServer.getGlobalConfig().getDomain());
 	}
 }

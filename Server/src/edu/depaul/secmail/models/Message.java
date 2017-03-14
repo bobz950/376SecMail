@@ -131,14 +131,8 @@ public class Message implements DBModel {
 				
 				// Write into notifications table for each message recipient
 				for (User recipient : recipients){
-					String messageRecipientSqlQuery = "INSERT INTO notification VALUES ("+ sender.getID() + ", " + recipient.getID() + ", " + rs.getInt(1) + ", null)";
-					stmt = conn.prepareStatement(messageRecipientSqlQuery);
-					int rsMR= stmt.executeUpdate();
-					if (rsMR != 0){
-						System.out.println("Insert message_recipient success");
-					} else {
-						System.out.println("Insert message_recipient fail");
-					}
+					DBNotification n = new DBNotification(sender, recipient, subject, rs.getInt(1), messageDate);
+					n.dbWrite();
 				}
 				
 			} else {

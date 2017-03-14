@@ -54,7 +54,7 @@ public class DBSetup {
 		String createMessage = "CREATE TABLE message(message_id INT AUTO_INCREMENT, message_subject VARCHAR(100),message_content VARCHAR(1000),message_attatchment BLOB, PRIMARY KEY (message_id));";
 		String createTag = "CREATE TABLE tag(tag_id INT auto_increment,tag_name VARCHAR(40),primary key ( tag_id));";
 		String createMessageTag = "CREATE TABLE message_tag(tag_id INT,message_id INT, recipient_id INT,FOREIGN KEY (tag_id) REFERENCES tag(tag_id),FOREIGN KEY (recipient_id) REFERENCES user(user_id));";
-		String createMessageRecipient = "CREATE TABLE notification(sender_id INT NOT NULL, recipient_id INT NOT NULL, message_id INT, message_date DATETIME, FOREIGN KEY (sender_id) REFERENCES user (user_id),FOREIGN KEY (recipient_id) REFERENCES user (user_id), FOREIGN KEY (message_id) REFERENCES message (message_id));";
+		String createNotification = "CREATE TABLE notification(notification_id INT NOT NULL AUTO_INCREMENT, sender_id INT NOT NULL, recipient_id INT NOT NULL, message_id INT, message_date DATETIME, PRIMARY KEY (notification_id), FOREIGN KEY (sender_id) REFERENCES user (user_id),FOREIGN KEY (recipient_id) REFERENCES user (user_id), FOREIGN KEY (message_id) REFERENCES message (message_id));";
 		
 		
 		// Execute Queries
@@ -97,7 +97,7 @@ public class DBSetup {
 			}
 			
 			// Create MessageRecipient Table
-			stmt = conn.prepareStatement(createMessageRecipient);
+			stmt = conn.prepareStatement(createNotification);
 			rs = stmt.executeUpdate();
 			if (rs != 0){
 				System.out.println("Create MessageRecipient table success");

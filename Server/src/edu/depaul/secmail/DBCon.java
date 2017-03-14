@@ -2,6 +2,7 @@ package edu.depaul.secmail;
 
 import java.sql.*;
 
+import edu.depaul.secmail.models.DBNotification;
 import edu.depaul.secmail.models.Message;
 import edu.depaul.secmail.models.Tag;
 import edu.depaul.secmail.models.User;
@@ -25,20 +26,27 @@ public class DBCon {
 		//getRemoteConnection();
 		
 		
-		//User x = new User("Username", "Password");
+		User x = new User("Username", "Password");
 		//System.out.println(x.toString());
-		//x.dbWrite();
+		x.dbWrite();
 		//System.out.println(x.toString());
 	
-		//Message m = new Message(x, x, "Subject", "Content", null);
+		Message m = new Message(x, x, "Subject", "Content", new Date(0));
 		//System.out.println(m.toString());
-		//m.dbWrite();
+		m.addRecipient(x);
+		m.addRecipient(x);
+		m.dbWrite();
 		//System.out.println(m.toString());
 		
-		Tag t = new Tag("tag");
-		System.out.println(t.toString());
-		t.dbWrite();
-		System.out.println(t.toString());
+		//Tag t = new Tag("tag");
+		//System.out.println(t.toString());
+		//t.dbWrite();
+		//System.out.println(t.toString());
+		
+		//DBNotification dbn = new DBNotification(x, x, "subject", m.getID(), new Date(0));
+		//System.out.println(dbn.toString());
+		//dbn.dbWrite();
+		//System.out.println(dbn.toString());
 	}
 	
 	// Return Connection to AWS Server
