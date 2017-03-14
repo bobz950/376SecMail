@@ -135,7 +135,7 @@ public class MailServerConnection extends Thread {
 			 
 			String[] parts = newVal.toUpperCase().split(" ");
 				 
-				    // Filter out the entries which do not contain the entered text
+			// Filter out the entries which do not contain the entered text
 			ObservableList<String> subentries = FXCollections.observableArrayList();
 			for ( Object entry: list.getItems() ) {
 				boolean match = true;

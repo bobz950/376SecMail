@@ -129,7 +129,7 @@ public class TwoFactorAuthentication {
     
     
     // Return the string prepended with 0s.
-    
+    //Rohail Baig
     static String zeroPrepend(long num, int digits) {
         String numStr = Long.toString(num);
         if (numStr.length() >= digits) {
@@ -233,6 +233,8 @@ public class TwoFactorAuthentication {
         }
         return result;
     }
+    //Rohail Baig
+    //Testing the encoded outome of the return value that transmit to Authenticator application. 
     public static void main (String [] Args) {
     //	TwoFactorAuthentication  zero = zeroPrepend(num, digits);
     	
