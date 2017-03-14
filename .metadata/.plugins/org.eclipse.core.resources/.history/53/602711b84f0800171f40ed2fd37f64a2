@@ -25,20 +25,20 @@ public class DBCon {
 		//getRemoteConnection();
 		
 		
-		//User x = new User("Username", "Password");
+		User x = new User("Username", "Password");
 		//System.out.println(x.toString());
-		//x.dbWrite();
+		x.dbWrite();
 		//System.out.println(x.toString());
 	
-		//Message m = new Message(x, x, "Subject", "Content", null);
-		//System.out.println(m.toString());
-		//m.dbWrite();
-		//System.out.println(m.toString());
+		Message m = new Message(x, x, "Subject", "Content", null);
+		System.out.println(m.toString());
+		m.dbWrite();
+		System.out.println(m.toString());
 		
 		Tag t = new Tag("tag");
 		System.out.println(t.toString());
 		t.dbWrite();
-		System.out.println(t.toString());
+		Sysetm.out.println(t.toString());
 	}
 	
 	// Return Connection to AWS Server

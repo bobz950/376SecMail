@@ -17,15 +17,6 @@ public class Tag implements DBModel {
 		this.tagName = tagName;
 	}
 	
-	public Tag(String tagName){
-		this.tagName = tagName;
-	}
-	
-	@Override
-	public String toString() {
-		return "Tag [tagID=" + tagID + ", tagName=" + tagName + "]";
-	}
-
 	public String getTagName(){
 		return tagName;
 	}
