@@ -1,4 +1,4 @@
-// Will Pankiewicz
+// Alan Strimbu
 
 package edu.depaul.secmail.models;
 
