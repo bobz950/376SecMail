@@ -71,7 +71,7 @@ public class MailServerConnection extends Thread {
 		return mailCache.get(ID);
 	}
 	
-	
+	//Evan Schirle
 	public LinkedList<Notification> getNewNotifications()
 	{		
 		PacketHeader getNotificationsHeader = new PacketHeader(Command.GET_NOTIFICATION);
@@ -94,7 +94,10 @@ public class MailServerConnection extends Thread {
 				return notifications;
 			}
 
-		}catch (ClassNotFoundException | IOException e) {return null;}
+		}catch (ClassNotFoundException | IOException e) {
+			System.out.println("error receiving notifications");
+			return null;
+		}
 	}
 	
 	//This is where we add methods for making requests for data from the main server
