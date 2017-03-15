@@ -12,6 +12,7 @@ import edu.depaul.secmail.Main;
 import edu.depaul.secmail.PacketHeader;
 import edu.depaul.secmail.ResponseContent;
 
+//Evan Schirle
 public class ProcessEmail extends ResponseContent {
 	private String to;
 	private String subject;
@@ -38,6 +39,7 @@ public class ProcessEmail extends ResponseContent {
 		} catch (UnsupportedEncodingException e2) {}
 		String[] recps = {};
 		boolean mult = false;
+		//multiple recipients
 		if (to.indexOf(",") > 0) {
 			to = to.replaceAll("\\s+", "");
 			recps = to.split(",");
@@ -46,8 +48,8 @@ public class ProcessEmail extends ResponseContent {
 		EmailStruct e = Main.makeEmail();
 		if (mult) {
 			for (String s : recps) e.addRecipient(s);
-		}
-		else e.addRecipient(to);
+		}else 
+			e.addRecipient(to);
 		e.setSubject(subject);
 		e.setBody(message);
 		
@@ -58,7 +60,9 @@ public class ProcessEmail extends ResponseContent {
 			try {
 				encPass = URLDecoder.decode(encPass, "UTF-8");
 			} 
-			catch (UnsupportedEncodingException e1) {}
+			catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
 			e.encrypt(encPass);
 		}
 		
@@ -68,9 +72,13 @@ public class ProcessEmail extends ResponseContent {
 			mainConnection.secIO.writeObject(e);
 			mainConnection.secIO.writeObject(Main.makePH(Command.END_EMAIL));
 			PacketHeader response = (PacketHeader)mainConnection.secIO.readObject();
-			if (response.getCommand() == Command.CONNECT_SUCCESS) return true;
-			else return false;
-		} catch (IOException | ClassNotFoundException e1) {return false;}
+			if (response.getCommand() == Command.CONNECT_SUCCESS) 
+				return true;
+			else 
+				return false;
+		} catch (IOException | ClassNotFoundException e1) {
+			return false;
+		}
 	}
 
 }

@@ -228,7 +228,6 @@ public class RecvMailWindow extends Shell {
 			io.writeObject(getNotificationsHeader);
 		} catch (IOException e1) {
 			System.out.println("failed to send request");
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -239,6 +238,7 @@ public class RecvMailWindow extends Shell {
 				noNotificationsMessageBox();
 			}
 			else{
+				@SuppressWarnings("unchecked")
 				LinkedList<Notification> notifications = (LinkedList<Notification>) io.readObject();
 				while(!notifications.isEmpty()){
 					Notification n = (Notification) notifications.pop();

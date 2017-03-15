@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import edu.depaul.secmail.MailServerConnection;
 import edu.depaul.secmail.ResponseContent;
-
+//Evan Schirle
 public class SendEmail extends ResponseContent {
 	public SendEmail(MailServerConnection c) {
 		super(true, c);
@@ -23,6 +23,9 @@ public class SendEmail extends ResponseContent {
 			r.close();
 			return res.toString();
 		} 
-		catch (IOException e) {return "Error";}
+		catch (IOException e) {
+			e.printStackTrace();
+			return "Error";
+		}
 	}
 }

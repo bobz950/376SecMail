@@ -20,6 +20,8 @@ public class ReadEmail extends ResponseContent {
 	private String sender;
 	private String date;
 	private String pass;
+	
+	//Evan Schirle
 	public ReadEmail(MailServerConnection c, HttpHandler handler) {
 		super(true, c);
 		requestHeaders = handler.getRequestHeaders();
@@ -49,6 +51,7 @@ public class ReadEmail extends ResponseContent {
 		else showEmail(mainConnection.getFromCache(ID));
 	}
 	
+	//Robert Alianello
 	private void showEmail(EmailStruct e) {
 		if (!e.isEncrypted()) show(e);
 		else {
@@ -65,7 +68,9 @@ public class ReadEmail extends ResponseContent {
 					prompt = prompt.replaceAll("<~~!!@@fields@@!!~~>", makeFields()); //add previous fields back to request
 					setContent(prompt);
 				} 
-				catch (IOException eio) {setContent("Error");}
+				catch (IOException eio) {
+					setContent("Error");
+				}
 			}
 			else if (attemptDecrypt(e)) show(e);
 			else setContent("Email password was incorrect");
