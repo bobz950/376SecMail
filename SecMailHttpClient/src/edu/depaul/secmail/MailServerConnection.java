@@ -100,5 +100,7 @@ public class MailServerConnection extends Thread {
 		}
 	}
 	
+	
+	
 	//This is where we add methods for making requests for data from the main server
 }
