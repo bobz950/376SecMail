@@ -1,4 +1,4 @@
-// Will Pankiewicz
+// Caylah Peoples
 // The AWS instance is a subject to change. Replace the hostname with the aws rds endpoint, and the appropriate username and password
 
 package edu.depaul.secmail;

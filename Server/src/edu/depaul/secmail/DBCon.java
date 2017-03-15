@@ -1,4 +1,4 @@
-// Will Pankiewicz
+// Caylah Peoples
 
 package edu.depaul.secmail;
 

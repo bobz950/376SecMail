@@ -1,4 +1,4 @@
-// WILL PANKIEWICZ
+// Bianca Cote
 
 package edu.depaul.secmail.models;
 
