@@ -11,6 +11,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Optional;
 
 import edu.depaul.secmail.models.DBNotification;
 import edu.depaul.secmail.models.Message;
@@ -107,17 +108,25 @@ public class SecMailServer {
 		return ret;
 	}
 	
-	//Jacob Burkamper
+	//Robert Alianello
 	public static synchronized void addNotificationToList(Notification n)
 	{		
-		//add the notification to the list.		
+		//check if there is a duplicate notification
+		if (notificationContains(n)) return;
+		//if not, add the notification to the list.	
 		notifications.add(n);
-		if(n.getType() == NotificationType.EMAIL_RECEIVED){
-			Log.Debug("Email Confirmation Recieved");
-		}
 		
 		saveNotification(n); // save the notification to disk
 		return;
+	}
+	//Robert Alianello
+	public static boolean notificationContains(Notification n) {
+		Optional<Notification> f = new ArrayList<Notification>(notifications).stream().filter(No -> (No.getTo().compile().trim().equals(n.getTo().compile().trim())) 
+				&& (No.getFrom().compile().trim().equals(n.getFrom().compile().trim())) && 
+				(No.getID().equals(n.getID())) && (No.getType() == n.getType()))
+				.findFirst();
+		if (f.isPresent()) return true;
+		else return false;
 	}
 	
 	//returns the Config object being used by the server

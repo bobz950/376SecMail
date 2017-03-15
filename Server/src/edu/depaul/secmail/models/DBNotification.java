@@ -78,7 +78,7 @@ public class DBNotification {
 	}
 	
 	public Notification toNotificatonStruct(){
-		return SecMailServer.makeNotification(recipient.toUserStruct(), sender.toUserStruct(), NotificationType.NEW_EMAIL, emailID, subject, sendDate);
+		return SecMailServer.makeNotification(recipient.toUserStruct(), sender.toUserStruct(), notificationType, emailID, subject, sendDate);
 	}
 	
 	public void dbWrite() {
@@ -282,7 +282,7 @@ public class DBNotification {
 				String notType = rs.getString("notification_type");
 				
 		
-				notification = new DBNotification(id, recipient, recipient, message.getSubject(), message.getMessageID(), messageDate);
+				notification = new DBNotification(id, sender, recipient, message.getSubject(), message.getMessageID(), messageDate);
 				if (notType.equals("EMAIL_RECEIVED")) notification.setTypeReceived();
 				dbNotificationArrayList.add(notification);
 			}

@@ -60,7 +60,8 @@ public class MailServerConnection extends Thread {
 	}
 	
 	public void addToMailCache(String ID, EmailStruct e) {
-		mailCache.put(ID, e);
+		//only add to cache if the cache has 15 or less items, so memory usage isn't crazy insane
+		if (mailCache.size() < 16) mailCache.put(ID, e);
 	}
 	
 	public boolean isCached(String ID) {

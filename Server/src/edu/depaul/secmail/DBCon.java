@@ -320,7 +320,7 @@ public class DBCon {
 			stmt = conn.prepareStatement(messageSqlQuery, Statement.RETURN_GENERATED_KEYS);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
-			
+			stmt.close();
 			// Extract data from result set
 			if (rs.next()){
 				System.out.println("Insert message success");

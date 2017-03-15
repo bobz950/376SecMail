@@ -6,6 +6,8 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -28,16 +30,20 @@ public class HttpSession {
 		}
 		//Robert Alianello
 		public void sessionClean() {
+			List<String> oldKeys = new LinkedList<String>();
+			
 			Iterator<Entry<String, Long>> it = sessionLog.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry<String, Long> p = it.next();
 				Long entryTime = p.getValue();
 				String key = p.getKey();
-				
-				//if more than 10 minutes since sessionID was last used, kill session
+				//add keys to be removed into temporary collection
 				if ((new Date().getTime() - entryTime) > 600000) {
-					HttpSession.remove(key);
+					oldKeys.add(key); //if more than 10 minutes since sessionID was last used, kill session
 				}
+			}
+			for (String key : oldKeys) {
+				HttpSession.remove(key);
 			}
 		}
 	}

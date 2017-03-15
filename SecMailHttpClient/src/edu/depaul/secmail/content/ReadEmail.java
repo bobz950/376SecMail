@@ -53,11 +53,11 @@ public class ReadEmail extends ResponseContent {
 	
 	//Robert Alianello
 	private void showEmail(EmailStruct e) {
+		this.mainConnection.addToMailCache(ID, e); //add to cache so we don't have to go back to server for decrypt attempt, and so viewing is faster
 		if (!e.isEncrypted()) show(e);
 		else {
 			//prompt for password
 			if (pass == null) {
-				this.mainConnection.addToMailCache(ID, e); //add to cache so we don't have to go back to server for decrypt attempt
 				StringBuilder res = new StringBuilder();
 				String s;
 				try {
