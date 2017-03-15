@@ -54,6 +54,14 @@ public class Message implements DBModel {
 		this.subject = message_subject;
 		this.content = message_content;
 	}
+	
+	// Constructor that matches DB, minus the attachment, and write encrypted email
+	public Message(String messageID, String message_subject, byte[] encryptedBody){
+			this.messageID = messageID;
+			this.subject = message_subject;
+			this.encryptedBytes = encryptedBody;
+			this.encrypted = true;
+		}
 
 	public User getSender() {
 		return sender;
@@ -119,7 +127,9 @@ public class Message implements DBModel {
 	public void dbWrite() {
 		// the last parameter is an attachment BLOB field in the database
 		//String messageSqlQuery = "INSERT INTO message VALUES (0, \"" + subject + "\", + \""+content + "\", null)";
-		String messageSqlQuery = "INSERT INTO message (message_id, message_subject, message_content) VALUES (?, ?, ?)";
+		String messageSqlQuery;
+		if (!encrypted) messageSqlQuery = "INSERT INTO message (message_id, message_subject, message_content) VALUES (?, ?, ?)";
+		else messageSqlQuery = "INSERT INTO message (message_id, message_subject, encrypted_bytes) VALUES (?, ?, ?)";
 		//System.out.println(messageSqlQuery);
 		
 		Connection conn = null;
@@ -138,7 +148,8 @@ public class Message implements DBModel {
 			stmt = conn.prepareStatement(messageSqlQuery, Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, messageID);
 			stmt.setString(2, subject);
-			stmt.setString(3, content);
+			if (!encrypted) stmt.setString(3, content);
+			else stmt.setBytes(3, encryptedBytes);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			
@@ -278,8 +289,10 @@ public class Message implements DBModel {
 				String id = rs.getString("message_id");
 				String messageSubject = rs.getString("message_subject");
 				String messageContent = rs.getString("message_content");
+				byte[] encryptedBody = rs.getBytes("encrypted_bytes");
 				
-				message = new Message(id, messageSubject, messageContent);
+				if (messageContent == null && encryptedBody != null) message = new Message(id, messageSubject, encryptedBody);
+				else message = new Message(id, messageSubject, messageContent);
 			}
 			
 			// clean up connection
@@ -314,7 +327,8 @@ public class Message implements DBModel {
 		for (User recipient : recipients){
 			emailStruct.addRecipient(recipient.getUserAddress());
 		}
-		emailStruct.setBody(content);
+		if (encrypted) emailStruct.setEncryptedBytes(encryptedBytes);
+		else emailStruct.setBody(content);
 		emailStruct.setSubject(subject);
 		emailStruct.setID(messageID);
 		return emailStruct;

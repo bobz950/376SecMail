@@ -82,12 +82,12 @@ public class SecMailServer {
 	
 	}
 	
-	//save the notifications list to a file
-	//Jacob Burkamper
+	//save the notifications list to db
+	//Robert Alianello
 	private static void saveNotification(Notification n) 
 	{
-		
 		DBNotification notification = new DBNotification(new User(n.getFrom().getUser()), new User(n.getTo().getUser()), n.getSubject(), n.getID(), new java.sql.Date(n.getDate().getTime()));
+		if (n.getType() == NotificationType.EMAIL_RECEIVED) notification.setTypeReceived();
 		notification.dbWrite();
 	}
 	

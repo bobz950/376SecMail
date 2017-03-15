@@ -274,7 +274,12 @@ public class ClientHandler implements Runnable{
 	//Robert Alianello
 	private void storeEmail(EmailStruct email) throws IOException
 	{
-		Message dbEmail = new Message(email.getID(), email.getSubject(), email.getBody());
+		Message dbEmail;
+		if (!email.isEncrypted()) dbEmail = new Message(email.getID(), email.getSubject(), email.getBody());
+		else {
+			byte[] encryptedBody = email.getEncryptedBytes();
+			dbEmail = new Message(email.getID(), email.getSubject(), encryptedBody);
+		}
 		LinkedList<UserStruct> recipients = email.getToList();
 		//add all recipients
 		for (UserStruct usr : recipients) dbEmail.addRecipient(new User(usr.getUser()));

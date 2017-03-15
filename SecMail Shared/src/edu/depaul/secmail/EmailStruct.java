@@ -391,5 +391,14 @@ public class EmailStruct implements Serializable{
 			e.printStackTrace();
 		}
 	}
+	
+	public byte[] getEncryptedBytes() {
+		return encryptedBytes;
+	}
+	
+	public void setEncryptedBytes(byte[] b) {
+		encryptedBytes = b;
+		this.encrypted = true;
+	}
 
 }

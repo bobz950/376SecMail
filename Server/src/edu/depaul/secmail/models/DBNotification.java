@@ -23,6 +23,7 @@ public class DBNotification {
 	private String subject;
 	private String emailID;
 	private Date sendDate;
+	private NotificationType notificationType = NotificationType.NEW_EMAIL;	//default to this
 
 	// Constructor to match the db
 	public DBNotification(String notificationID,User sender, User recipient, String subject, String emailID, Date sendDate) {
@@ -61,6 +62,14 @@ public class DBNotification {
 	public Date getSendDate() {
 		return sendDate;
 	}
+	
+	public void setTypeReceived() {
+		notificationType = NotificationType.EMAIL_RECEIVED;
+	}
+	
+	public void setTypeNew() {
+		notificationType = NotificationType.NEW_EMAIL;
+	}
 
 	@Override
 	public String toString() {
@@ -74,7 +83,8 @@ public class DBNotification {
 	
 	public void dbWrite() {
 
-		String sql = "INSERT INTO notification VALUES (0,  \"" + sender.getID() + "\", \"" + recipient.getID() + "\", \"" + emailID + "\" , \"" + new java.sql.Date(sendDate.getTime()) + "\")";
+		String sql = "INSERT INTO notification VALUES (0,  \"" + sender.getID() + "\", \"" + recipient.getID() + "\", \"" + emailID + "\" , \"" + 
+					new java.sql.Date(sendDate.getTime()) + "\", \"" + notificationType.toString() + "\")";
 		System.out.println(sql);
 		java.sql.Connection conn = null;
 		PreparedStatement stmt = null;
@@ -198,8 +208,10 @@ public class DBNotification {
 				User recipient= User.getUserFromID(rs.getInt("recipient_id"));
 				Message message = Message.getMessageByID(rs.getString("message_id"));
 				Date messageDate = rs.getDate("message_date");
+				String notType = rs.getString("notification_type");
 		
-				notification = new DBNotification(id, sender, recipient, message.getSubject(), new Integer(message.getID()).toString(), messageDate);
+				notification = new DBNotification(id, sender, recipient, message.getSubject(), message.getMessageID(), messageDate);
+				if (notType.equals("EMAIL_RECEIVED")) notification.setTypeReceived();
 			}
 			
 			// clean up connection
@@ -256,8 +268,11 @@ public class DBNotification {
 				User recipient= User.getUserFromID(rs.getInt("recipient_id"));
 				Message message = Message.getMessageByID(rs.getString("message_id"));
 				Date messageDate = rs.getDate("message_date");
+				String notType = rs.getString("notification_type");
+				
 		
 				notification = new DBNotification(id, recipient, recipient, message.getSubject(), message.getMessageID(), messageDate);
+				if (notType.equals("EMAIL_RECEIVED")) notification.setTypeReceived();
 				dbNotificationArrayList.add(notification);
 			}
 			

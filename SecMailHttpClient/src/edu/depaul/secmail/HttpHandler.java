@@ -30,7 +30,7 @@ public class HttpHandler implements Runnable {
 	private String user = null;
 	private RequestType method;
 	private boolean isText = true;
-	
+	//Robert Alianello
 	public enum RequestType {
 		GET,
 		POST,
