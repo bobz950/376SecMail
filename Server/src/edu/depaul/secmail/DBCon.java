@@ -29,7 +29,7 @@ public class DBCon {
 		//getRemoteConnection();
 		
 		
-		//User x = new User("Username", "Password");
+		//User x = new User("Usernamekljh", "Password");
 		//System.out.println(x.toString());
 		//x.dbWrite();
 		//System.out.println(x.toString());
@@ -62,7 +62,7 @@ public class DBCon {
 		//System.out.println(User.getUserFromID(4));
 		//System.out.println(User.getUserFromAddress("Username4"));
 	
-		//Message m = new Message(x, x2, "Subject", "Content", new Date(0));
+		//Message m = new Message(x, x, "Subject", "Content", new Date(0));
 		//System.out.println(m.toString());
 		//m.addRecipient(x3);
 		//m.addRecipient(x4);
@@ -81,14 +81,14 @@ public class DBCon {
 		
 
 		
-		//System.out.println(Message.getMessageByID(7));
-		ArrayList<DBNotification> notifications = DBNotification.getDBNotificationsByRecipientID("11");
-		for (DBNotification n : notifications){
-			System.out.println("Notification: ");
-			System.out.println(n + "\n");
-			System.out.println("Messsage: ");
-			System.out.println(n.getMessageByDBNotification() + "\n");
-		}
+		System.out.println(Message.getMessageByID("os25l8l6nd57fsugsvmkts1h9d"));
+		//ArrayList<DBNotification> notifications = DBNotification.getDBNotificationsByRecipientID("13");
+		//for (DBNotification n : notifications){
+			//System.out.println("Notification: ");
+			//System.out.println(n + "\n");
+			//System.out.println("Messsage: ");
+			//System.out.println(n.getMessageByDBNotification() + "\n");
+		//}
 	
 	}
 	

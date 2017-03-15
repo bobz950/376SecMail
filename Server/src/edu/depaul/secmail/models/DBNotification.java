@@ -129,6 +129,17 @@ public class DBNotification {
 	
 	}
 	
+	// Returns the tags of a current message from a DBNotification
+	public ArrayList<Tag> getTagsFromDBNotification(){
+		Message message = Message.getMessageByNotification(this);
+		return message.getTags();
+	}
+	
+	// Static method of returning tags from Notification
+	public static ArrayList<Tag> getTagsFromDBNotification(DBNotification notification){
+		return notification.getTagsFromDBNotification();
+	}
+	
 	// returns a message based on the current notification object
 	public Message getMessageByDBNotification(){
 		return Message.getMessageByID(emailID);
